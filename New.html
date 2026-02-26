@@ -2222,14 +2222,16 @@
       return text;
     }
 
-    async function sendConsultantMessage() {
+    async function sendConsultantMessage(overrideText = null) {
       if (!consultantInputEl || consultantBusy) return;
-      const text = consultantInputEl.value.trim();
+      const text = (overrideText == null ? consultantInputEl.value : String(overrideText)).trim();
       if (!text) return;
 
       consultantBusy = true;
       addConsultantMessage('user', text);
-      consultantInputEl.value = '';
+      if (overrideText == null) {
+        consultantInputEl.value = '';
+      }
       setConsultantStatus('THINKING', '#facc15');
 
       try {
@@ -3027,6 +3029,21 @@
         setCommandFeedback(`Switched to ${cmd}`, '#4ade80');
         return;
       }
+
+      const looksLikeNaturalQuery =
+        raw.length > 8 &&
+        (raw.includes(' ') || /[?!.,]/.test(raw));
+
+      if (looksLikeNaturalQuery) {
+        switchWorkspace('consultant');
+        if (consultantInputEl) {
+          consultantInputEl.value = raw;
+        }
+        sendConsultantMessage(raw);
+        setCommandFeedback('Routed to AI consultant', '#38bdf8');
+        return;
+      }
+
       setCommandFeedback(`Unknown command: ${cmd} (type HELP)`, '#f97373');
     }
 
