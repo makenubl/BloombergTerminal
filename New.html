@@ -3066,7 +3066,7 @@
       setCommandFeedback(`Unknown command: ${cmd} (type HELP)`, '#f97373');
     }
 
-    async function fetchJsonWithTimeout(url, timeout = 1300) {
+    async function fetchJsonWithTimeout(url, timeout = 3500) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeout);
       try {

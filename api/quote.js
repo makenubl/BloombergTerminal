@@ -12,6 +12,61 @@ function normalizeSymbol(raw) {
   return symbol.replace(/[^A-Z0-9.\-^=]/g, '').slice(0, 18) || 'AAPL';
 }
 
+async function fetchFromQuoteEndpoint(symbol) {
+  const quoteUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbol)}`;
+  const response = await fetch(quoteUrl, {
+    headers: { 'User-Agent': 'BBS-Terminal/1.0' }
+  });
+  if (!response.ok) return null;
+  const data = await response.json();
+  return data?.quoteResponse?.result?.[0] || null;
+}
+
+async function fetchFromChartEndpoint(symbol) {
+  const chartUrl =
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}` +
+    '?range=1d&interval=1m&includePrePost=false';
+
+  const response = await fetch(chartUrl, {
+    headers: { 'User-Agent': 'BBS-Terminal/1.0' }
+  });
+  if (!response.ok) return null;
+
+  const data = await response.json();
+  const result = data?.chart?.result?.[0];
+  if (!result) return null;
+
+  const meta = result.meta || {};
+  const quote = result?.indicators?.quote?.[0] || {};
+  const closes = (quote.close || []).map(Number).filter(Number.isFinite);
+  const highs = (quote.high || []).map(Number).filter(Number.isFinite);
+  const lows = (quote.low || []).map(Number).filter(Number.isFinite);
+  const opens = (quote.open || []).map(Number).filter(Number.isFinite);
+  const volumes = (quote.volume || []).map(Number).filter(Number.isFinite);
+
+  const previousClose = Number(meta.previousClose || meta.chartPreviousClose || 0);
+  const price = Number(meta.regularMarketPrice || closes[closes.length - 1] || 0);
+  const change = Number.isFinite(previousClose) && previousClose
+    ? price - previousClose
+    : Number(closes.length > 1 ? closes[closes.length - 1] - closes[closes.length - 2] : 0);
+  const changePctValue = Number.isFinite(previousClose) && previousClose
+    ? (change / previousClose) * 100
+    : 0;
+
+  return {
+    symbol: meta.symbol || symbol,
+    regularMarketPrice: price,
+    regularMarketChange: change,
+    regularMarketChangePercent: changePctValue,
+    regularMarketVolume: volumes.reduce((acc, v) => acc + v, 0),
+    regularMarketOpen: Number(meta.regularMarketOpen || opens[0] || 0),
+    regularMarketDayHigh: Number(meta.regularMarketDayHigh || (highs.length ? Math.max(...highs) : 0)),
+    regularMarketDayLow: Number(meta.regularMarketDayLow || (lows.length ? Math.min(...lows) : 0)),
+    regularMarketPreviousClose: previousClose,
+    regularMarketTime: Number(meta.regularMarketTime || 0)
+  };
+}
+
 module.exports = async (req, res) => {
   if (req.method && req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
@@ -19,20 +74,9 @@ module.exports = async (req, res) => {
   }
 
   const symbol = normalizeSymbol(req.query?.symbol);
-  const quoteUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbol)}`;
 
   try {
-    const response = await fetch(quoteUrl, {
-      headers: { 'User-Agent': 'BBS-Terminal/1.0' }
-    });
-
-    if (!response.ok) {
-      res.status(502).json({ error: `Upstream quote error: ${response.status}` });
-      return;
-    }
-
-    const data = await response.json();
-    const item = data?.quoteResponse?.result?.[0];
+    const item = (await fetchFromQuoteEndpoint(symbol)) || (await fetchFromChartEndpoint(symbol));
     if (!item) {
       res.status(404).json({ error: `No quote found for ${symbol}` });
       return;
@@ -67,4 +111,3 @@ module.exports = async (req, res) => {
     });
   }
 };
-
