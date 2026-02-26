@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" data-color-scheme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BBS Terminal AI Settings</title>
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: rgba(15, 23, 42, 0.92);
+      --border: rgba(30, 64, 175, 0.6);
+      --ink: rgba(226, 232, 240, 0.95);
+      --muted: rgba(148, 163, 184, 1);
+      --accent: #38bdf8;
+      --ok: #4ade80;
+      --warn: #facc15;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: radial-gradient(ellipse at top, #1e3a8a 0%, #0f172a 40%, #020617 75%, #000000 100%);
+      color: var(--ink);
+    }
+
+    @font-face {
+      font-family: 'Berkeley Mono';
+      src: url('https://r2cdn.perplexity.ai/fonts/BerkeleyMono.woff2') format('woff2');
+    }
+
+    .shell {
+      width: min(900px, 94vw);
+      margin: 24px auto;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      background: linear-gradient(to right, #020617, #0b1120 45%, #020617);
+    }
+
+    .title {
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: #dbeafe;
+    }
+
+    .link {
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 11px;
+    }
+
+    .body {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      border: 1px solid rgba(55, 65, 81, 1);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--ink);
+      border-radius: 8px;
+      font: inherit;
+      font-size: 12px;
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    .textarea {
+      min-height: 170px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      border-color: rgba(56, 189, 248, 0.9);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+
+    .footer {
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+      padding: 12px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 8px;
+      border: 1px solid rgba(55, 65, 81, 1);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--ink);
+      font: inherit;
+      font-size: 11px;
+      padding: 8px 10px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .btn.primary {
+      border-color: rgba(52, 211, 153, 0.8);
+      background: rgba(6, 78, 59, 0.88);
+      color: #bbf7d0;
+    }
+
+    .status {
+      font-size: 11px;
+      color: var(--muted);
+      max-width: 420px;
+    }
+
+    .note {
+      margin-top: 2px;
+      color: var(--warn);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 760px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="head">
+      <div class="title">BBS Terminal // AI Settings</div>
+      <a class="link" href="New.html">Back To Terminal</a>
+    </header>
+
+    <section class="body">
+      <div class="row">
+        <label class="label" for="provider">Provider</label>
+        <select id="provider" class="select">
+          <option value="sim">Simulated (No API)</option>
+          <option value="openai">OpenAI</option>
+          <option value="minimax">MiniMax (custom endpoint)</option>
+          <option value="custom">Custom Compatible Endpoint</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label class="label" for="endpoint">Endpoint</label>
+        <input id="endpoint" class="input" placeholder="https://api.openai.com/v1/chat/completions" />
+      </div>
+
+      <div class="row">
+        <label class="label" for="model">Model</label>
+        <input id="model" class="input" placeholder="gpt-4o-mini" />
+      </div>
+
+      <div class="row">
+        <label class="label" for="api-key">API Key</label>
+        <input id="api-key" class="input" type="password" placeholder="sk-..." />
+      </div>
+
+      <div class="row">
+        <label class="label" for="system-prompt">System Prompt</label>
+        <textarea id="system-prompt" class="textarea"></textarea>
+      </div>
+
+      <div class="note">
+        Keys are stored in browser local storage for this prototype. For production, route requests through your own secure backend instead of exposing provider keys in frontend code.
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="btns">
+        <button class="btn primary" id="save-btn" type="button">Save</button>
+        <button class="btn" id="defaults-btn" type="button">Load Defaults</button>
+        <button class="btn" id="clear-key-btn" type="button">Clear Key</button>
+      </div>
+      <div class="status" id="status">Ready.</div>
+    </footer>
+  </main>
+
+  <script>
+    const defaults = {
+      provider: 'sim',
+      endpoint: '',
+      model: 'gpt-4o-mini',
+      apiKey: '',
+      systemPrompt: 'You are BBS Terminal Consultant. Give short, practical trading guidance with levels, risk, and invalidation.'
+    };
+
+    const providerEl = document.getElementById('provider');
+    const endpointEl = document.getElementById('endpoint');
+    const modelEl = document.getElementById('model');
+    const apiKeyEl = document.getElementById('api-key');
+    const systemPromptEl = document.getElementById('system-prompt');
+    const statusEl = document.getElementById('status');
+
+    const safeGet = (key, fallback = '') => {
+      try {
+        const v = localStorage.getItem(key);
+        return v == null ? fallback : v;
+      } catch (err) {
+        return fallback;
+      }
+    };
+
+    const safeSet = (key, value) => {
+      try {
+        localStorage.setItem(key, value);
+      } catch (err) {
+        // Ignore write issues in restricted/private mode.
+      }
+    };
+
+    function defaultEndpoint(provider) {
+      if (provider === 'openai') return 'https://api.openai.com/v1/chat/completions';
+      return '';
+    }
+
+    function setStatus(text, color = 'rgba(148,163,184,1)') {
+      statusEl.textContent = text;
+      statusEl.style.color = color;
+    }
+
+    function loadFormFromStorage() {
+      const provider = safeGet('bbs_ai_provider', defaults.provider);
+      providerEl.value = provider;
+      endpointEl.value = safeGet('bbs_ai_endpoint', defaultEndpoint(provider));
+      modelEl.value = safeGet('bbs_ai_model', defaults.model);
+      apiKeyEl.value = safeGet('bbs_ai_api_key', defaults.apiKey);
+      systemPromptEl.value = safeGet('bbs_ai_system_prompt', defaults.systemPrompt);
+      setStatus('Loaded saved settings.', '#93c5fd');
+    }
+
+    function persist() {
+      safeSet('bbs_ai_provider', providerEl.value);
+      safeSet('bbs_ai_endpoint', endpointEl.value.trim());
+      safeSet('bbs_ai_model', modelEl.value.trim());
+      safeSet('bbs_ai_api_key', apiKeyEl.value.trim());
+      safeSet('bbs_ai_system_prompt', systemPromptEl.value.trim());
+      setStatus('Saved. Return to terminal consultant tab.', '#4ade80');
+    }
+
+    providerEl.addEventListener('change', () => {
+      if (!endpointEl.value.trim()) {
+        endpointEl.value = defaultEndpoint(providerEl.value);
+      }
+      setStatus(`Provider switched to ${providerEl.value.toUpperCase()}.`, '#93c5fd');
+    });
+
+    document.getElementById('save-btn').addEventListener('click', persist);
+
+    document.getElementById('defaults-btn').addEventListener('click', () => {
+      providerEl.value = defaults.provider;
+      endpointEl.value = defaults.endpoint;
+      modelEl.value = defaults.model;
+      apiKeyEl.value = defaults.apiKey;
+      systemPromptEl.value = defaults.systemPrompt;
+      setStatus('Defaults loaded in form. Click Save to persist.', '#facc15');
+    });
+
+    document.getElementById('clear-key-btn').addEventListener('click', () => {
+      apiKeyEl.value = '';
+      safeSet('bbs_ai_api_key', '');
+      setStatus('API key cleared.', '#f97373');
+    });
+
+    loadFormFromStorage();
+  </script>
+</body>
+</html>

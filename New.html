@@ -323,6 +323,18 @@
       color: rgba(226, 232, 240, 0.95);
     }
 
+    .top-link {
+      color: rgba(125, 211, 252, 0.96);
+      text-decoration: none;
+      font-family: var(--font-family-mono);
+      font-size: 11px;
+    }
+
+    .top-link:hover {
+      color: #a5f3fc;
+      text-decoration: underline;
+    }
+
     .top-chip-label {
       text-transform: uppercase;
       letter-spacing: 0.12em;
@@ -1071,6 +1083,31 @@
       box-shadow: 0 0 18px rgba(251, 191, 36, 0.25);
     }
 
+    .opportunity-status {
+      border: 1px solid rgba(245, 158, 11, 0.55);
+      background: rgba(120, 53, 15, 0.18);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-family: var(--font-family-mono);
+      font-size: 10px;
+      color: #fcd34d;
+      margin-bottom: 6px;
+    }
+
+    .buzzer-toggle {
+      width: 100%;
+      margin-bottom: 6px;
+      border-color: rgba(245, 158, 11, 0.65);
+      color: #fcd34d;
+      background: rgba(120, 53, 15, 0.2);
+    }
+
+    .buzzer-toggle.off {
+      border-color: rgba(55, 65, 81, 1);
+      color: rgba(148, 163, 184, 1);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
     .market-matrix-card {
       padding-top: 8px;
     }
@@ -1114,7 +1151,7 @@
 
     .workspace-tabs {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 5px;
     }
 
@@ -1240,6 +1277,102 @@
     .summary-stat .v {
       font-size: 12px;
       color: rgba(226, 232, 240, 0.94);
+    }
+
+    .consultant-card {
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+
+    .consultant-meta {
+      margin-top: 6px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: var(--font-family-mono);
+      font-size: 10px;
+      color: rgba(148, 163, 184, 1);
+    }
+
+    .consultant-meta strong {
+      color: rgba(226, 232, 240, 0.95);
+      font-weight: 500;
+    }
+
+    .consultant-chat {
+      margin-top: 8px;
+      max-height: 260px;
+      min-height: 220px;
+      overflow-y: auto;
+      border: 1px solid rgba(30, 64, 175, 0.45);
+      border-radius: 8px;
+      padding: 8px;
+      background: rgba(2, 6, 23, 0.55);
+    }
+
+    .chat-msg {
+      margin-bottom: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(51, 65, 85, 0.8);
+      padding: 7px 8px;
+      font-family: var(--font-family-mono);
+      font-size: 11px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .chat-msg.user {
+      border-color: rgba(34, 197, 94, 0.5);
+      background: rgba(6, 78, 59, 0.2);
+      color: rgba(220, 252, 231, 0.95);
+    }
+
+    .chat-msg.assistant {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(2, 132, 199, 0.12);
+      color: rgba(224, 242, 254, 0.95);
+    }
+
+    .chat-meta {
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: rgba(148, 163, 184, 0.95);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .consultant-input-row {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .consultant-input {
+      height: 34px;
+    }
+
+    .consultant-clear {
+      height: 34px;
+      min-width: 70px;
+    }
+
+    .app-root.opportunity-flash {
+      animation: opportunityFlash 0.8s ease-out;
+    }
+
+    @keyframes opportunityFlash {
+      0% {
+        filter: saturate(1) brightness(1);
+      }
+      30% {
+        filter: saturate(1.25) brightness(1.25);
+      }
+      100% {
+        filter: saturate(1) brightness(1);
+      }
     }
 
     .command-line {
@@ -1374,6 +1507,9 @@
       .workspace-tabs {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
+      .consultant-input-row {
+        grid-template-columns: 1fr;
+      }
       .alert-form {
         grid-template-columns: 1fr 1fr;
       }
@@ -1421,6 +1557,14 @@
           <span class="top-chip-label">WORKSPACE</span>
           <span id="workspace-mode">TRADE</span>
         </div>
+        <div class="top-chip">
+          <span class="top-chip-label">BUZZER</span>
+          <span id="buzzer-chip-state">ON</span>
+        </div>
+        <div class="top-chip">
+          <span class="top-chip-label">AI</span>
+          <a class="top-link" href="ai-settings.html">SETTINGS</a>
+        </div>
       </div>
     </div>
 
@@ -1451,6 +1595,10 @@
             <button type="submit" class="alert-btn">ADD</button>
           </form>
           <div class="alerts-list scroll-y" id="alerts-list"></div>
+          <div class="left-module-title">Opportunity Buzzer</div>
+          <div class="opportunity-status" id="opportunity-status">ARMED: scanning live tape for outsized setups...</div>
+          <button type="button" class="function-btn buzzer-toggle" id="buzzer-toggle">Buzzer: ON</button>
+          <div class="alerts-list scroll-y" id="opportunity-feed"></div>
         </div>
       </aside>
 
@@ -1572,6 +1720,7 @@
             <button class="workspace-tab" data-view="news">News</button>
             <button class="workspace-tab" data-view="calendar">Calendar</button>
             <button class="workspace-tab" data-view="summary">Summary</button>
+            <button class="workspace-tab" data-view="consultant">Consultant</button>
           </div>
 
           <div class="workspace-view active" data-view="trade" id="view-trade">
@@ -1699,13 +1848,33 @@
               <div class="summary-stat-grid" id="summary-stat-grid"></div>
             </section>
           </div>
+
+          <div class="workspace-view" data-view="consultant" id="view-consultant">
+            <section class="news-card consultant-card" style="height:auto;">
+              <div class="card-header">
+                <div class="card-title">AI Consultant</div>
+                <span id="consultant-status" style="font-size:10px;color:#93c5fd;">READY</span>
+              </div>
+              <div class="consultant-meta">
+                <span>Provider: <strong id="consultant-provider">SIMULATED</strong></span>
+                <span>Model: <strong id="consultant-model">LOCAL</strong></span>
+                <a class="top-link" href="ai-settings.html">Open Settings</a>
+              </div>
+              <div class="consultant-chat scroll-y" id="consultant-chat"></div>
+              <div class="consultant-input-row">
+                <input id="consultant-input" class="command-input consultant-input" placeholder="Ask for setups, macro context, entries, or risk plan..." />
+                <button id="consultant-send" class="command-run" type="button">ASK</button>
+                <button id="consultant-clear" class="function-btn consultant-clear" type="button">CLEAR</button>
+              </div>
+            </section>
+          </div>
         </div>
       </aside>
     </div>
 
     <div class="command-line">
       <span class="command-prefix">Terminal</span>
-      <input id="terminal-command" class="command-input" placeholder="Run function: HELP, TOP, ECO, PORT, BLT, ALRT, AAPL" />
+      <input id="terminal-command" class="command-input" placeholder="Run function: HELP, TOP, ECO, PORT, BLT, CONS, ALRT, BEEP, SETAI, AAPL" />
       <button id="command-run" class="command-run">RUN</button>
       <span id="command-feedback" class="command-feedback">READY</span>
     </div>
@@ -1741,7 +1910,10 @@
       { code: 'BLT', label: 'Blotter', view: 'blotter' },
       { code: 'PORT', label: 'Portfolio', view: 'summary' },
       { code: 'TRADE', label: 'Trade Ticket', view: 'trade' },
+      { code: 'CONS', label: 'AI Consultant', view: 'consultant' },
       { code: 'ALRT', label: 'Alerts', view: 'trade' },
+      { code: 'BEEP', label: 'Buzzer Toggle', view: 'trade' },
+      { code: 'SETAI', label: 'AI Settings', view: 'consultant' },
       { code: 'HELP', label: 'Commands', view: 'trade' },
       { code: '1D', label: 'Chart 1D', view: 'trade' }
     ];
@@ -1777,8 +1949,22 @@
     let activeTradeType = 'limit';
     let feedMode = 'SIM';
     let lastRenderedPrice = null;
+    let consultantBusy = false;
+    let buzzerEnabled = true;
+    let lastOpportunityAt = 0;
+    let audioCtx = null;
+    let opportunityFeed = [];
+    const consultantMessages = [];
 
     const rangePoints = { '1D': 72, '5D': 120, '1M': 180, '3M': 240 };
+    const opportunityCooldownMs = 22000;
+    const aiDefaults = {
+      provider: 'sim',
+      endpoint: '',
+      model: 'gpt-4o-mini',
+      apiKey: '',
+      systemPrompt: 'You are BBS Terminal Consultant. Give short, practical trading guidance with levels, risk, and invalidation.'
+    };
 
     const watchlistEl = document.getElementById('watchlist');
     const functionGridEl = document.getElementById('function-grid');
@@ -1787,6 +1973,11 @@
     const alertSymbolEl = document.getElementById('alert-symbol');
     const alertDirectionEl = document.getElementById('alert-direction');
     const alertPriceEl = document.getElementById('alert-price');
+    const opportunityStatusEl = document.getElementById('opportunity-status');
+    const opportunityFeedEl = document.getElementById('opportunity-feed');
+    const buzzerToggleEl = document.getElementById('buzzer-toggle');
+    const buzzerChipStateEl = document.getElementById('buzzer-chip-state');
+    const appRootEl = document.getElementById('app');
 
     const activeSymbolEl = document.getElementById('active-symbol');
     const symbolInputEl = document.getElementById('symbol-input');
@@ -1812,6 +2003,7 @@
 
     const newsListEl = document.getElementById('news-list');
     const econListEl = document.getElementById('econ-list');
+    const aiStatusEl = document.getElementById('ai-status');
     const summaryBodyEl = document.getElementById('summary-body');
     const summaryStatGridEl = document.getElementById('summary-stat-grid');
 
@@ -1828,6 +2020,13 @@
     const commandFeedbackEl = document.getElementById('command-feedback');
     const orderPriceEl = document.getElementById('order-price');
     const orderQtyEl = document.getElementById('order-qty');
+    const consultantStatusEl = document.getElementById('consultant-status');
+    const consultantProviderEl = document.getElementById('consultant-provider');
+    const consultantModelEl = document.getElementById('consultant-model');
+    const consultantChatEl = document.getElementById('consultant-chat');
+    const consultantInputEl = document.getElementById('consultant-input');
+    const consultantSendEl = document.getElementById('consultant-send');
+    const consultantClearEl = document.getElementById('consultant-clear');
 
     const workspaceTabs = document.querySelectorAll('.workspace-tab');
     const workspaceViews = document.querySelectorAll('.workspace-view');
@@ -1857,6 +2056,235 @@
       if (n >= 1e6) return `${(n / 1e6).toFixed(2)}M`;
       if (n >= 1e3) return `${(n / 1e3).toFixed(1)}K`;
       return `${Math.round(n)}`;
+    }
+
+    function safeGet(key, fallback = '') {
+      try {
+        const val = localStorage.getItem(key);
+        return val == null ? fallback : val;
+      } catch (err) {
+        return fallback;
+      }
+    }
+
+    function safeSet(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (err) {
+        // Ignore localStorage write issues in private or restricted contexts.
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function getDefaultEndpoint(provider) {
+      if (provider === 'openai') return 'https://api.openai.com/v1/chat/completions';
+      return '';
+    }
+
+    function getAIConfig() {
+      const provider = safeGet('bbs_ai_provider', aiDefaults.provider);
+      const endpoint = safeGet('bbs_ai_endpoint', aiDefaults.endpoint) || getDefaultEndpoint(provider);
+      return {
+        provider,
+        endpoint,
+        model: safeGet('bbs_ai_model', aiDefaults.model),
+        apiKey: safeGet('bbs_ai_api_key', aiDefaults.apiKey),
+        systemPrompt: safeGet('bbs_ai_system_prompt', aiDefaults.systemPrompt)
+      };
+    }
+
+    function refreshConsultantConfigUI() {
+      const cfg = getAIConfig();
+      if (consultantProviderEl) consultantProviderEl.textContent = cfg.provider.toUpperCase();
+      if (consultantModelEl) consultantModelEl.textContent = (cfg.model || 'DEFAULT').toUpperCase();
+      if (aiStatusEl) {
+        if (cfg.provider === 'sim') aiStatusEl.textContent = 'SIMULATED';
+        else aiStatusEl.textContent = cfg.apiKey ? 'CONFIGURED' : 'MISSING KEY';
+      }
+      return cfg;
+    }
+
+    function setConsultantStatus(text, color = '#93c5fd') {
+      if (!consultantStatusEl) return;
+      consultantStatusEl.textContent = text;
+      consultantStatusEl.style.color = color;
+    }
+
+    function renderConsultantChat() {
+      if (!consultantChatEl) return;
+      consultantChatEl.innerHTML = consultantMessages
+        .map((msg) => `
+          <div class="chat-msg ${msg.role}">
+            <div class="chat-meta">${escapeHtml(msg.role === 'user' ? 'YOU' : 'CONSULTANT')} • ${escapeHtml(msg.time)}</div>
+            <div>${escapeHtml(msg.text)}</div>
+          </div>
+        `)
+        .join('');
+      consultantChatEl.scrollTop = consultantChatEl.scrollHeight;
+    }
+
+    function addConsultantMessage(role, text) {
+      consultantMessages.push({
+        role,
+        text: String(text || ''),
+        time: nowTimeLabel()
+      });
+      if (consultantMessages.length > 80) consultantMessages.shift();
+      renderConsultantChat();
+    }
+
+    function buildLocalConsultantResponse(userText) {
+      const st = ensureSymbol(activeSymbol);
+      const change = st.price - st.prevClose;
+      const changePct = st.prevClose ? (change / st.prevClose) * 100 : 0;
+      const mover = topMover();
+      const moverState = ensureSymbol(mover.symbol);
+      const moverPct = moverState.prevClose ? ((moverState.price - moverState.prevClose) / moverState.prevClose) * 100 : 0;
+
+      return [
+        `Symbol focus: ${activeSymbol} at ${st.price.toFixed(2)} (${formatSigned(change)} / ${formatPct(changePct)}).`,
+        `Trade framing: wait for pullback toward ${(st.price * 0.995).toFixed(2)} or breakout above ${(st.price * 1.007).toFixed(2)} with volume confirmation.`,
+        `Risk: hard invalidation around ${(st.price * 0.988).toFixed(2)} if long, ${(st.price * 1.012).toFixed(2)} if short.`,
+        `Opportunity monitor: top mover ${mover.symbol} (${formatPct(moverPct)}).`,
+        `Your prompt: "${userText.trim().slice(0, 120)}".`
+      ].join('\n');
+    }
+
+    function extractAssistantText(data) {
+      if (!data) return '';
+      if (typeof data === 'string') return data;
+      if (Array.isArray(data.choices) && data.choices[0]?.message?.content) {
+        return data.choices[0].message.content;
+      }
+      if (typeof data.reply === 'string') return data.reply;
+      if (typeof data.output_text === 'string') return data.output_text;
+      if (typeof data.text === 'string') return data.text;
+      return '';
+    }
+
+    async function requestConsultantReply(userText) {
+      const cfg = refreshConsultantConfigUI();
+      if (cfg.provider === 'sim') {
+        return buildLocalConsultantResponse(userText);
+      }
+      if (!cfg.apiKey) {
+        throw new Error('No API key set. Open AI settings.');
+      }
+      if (!cfg.endpoint) {
+        throw new Error('No endpoint set for selected provider.');
+      }
+
+      const payload = {
+        model: cfg.model || 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: cfg.systemPrompt || aiDefaults.systemPrompt },
+          { role: 'user', content: userText }
+        ],
+        temperature: 0.2,
+        stream: false
+      };
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 22000);
+
+      let response;
+      try {
+        response = await fetch(cfg.endpoint, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${cfg.apiKey}`,
+            'X-API-Key': cfg.apiKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
+
+      if (!response.ok) {
+        const errText = await response.text().catch(() => '');
+        throw new Error(`Provider error ${response.status}: ${errText.slice(0, 200)}`);
+      }
+
+      const data = await response.json();
+      const text = extractAssistantText(data);
+      if (!text) throw new Error('Provider returned no assistant text.');
+      return text;
+    }
+
+    async function sendConsultantMessage() {
+      if (!consultantInputEl || consultantBusy) return;
+      const text = consultantInputEl.value.trim();
+      if (!text) return;
+
+      consultantBusy = true;
+      addConsultantMessage('user', text);
+      consultantInputEl.value = '';
+      setConsultantStatus('THINKING', '#facc15');
+
+      try {
+        const reply = await requestConsultantReply(text);
+        addConsultantMessage('assistant', reply);
+        setConsultantStatus('READY', '#93c5fd');
+      } catch (err) {
+        addConsultantMessage('assistant', `${buildLocalConsultantResponse(text)}\n\nProvider fallback reason: ${err.message}`);
+        setConsultantStatus('FALLBACK', '#f97373');
+      } finally {
+        consultantBusy = false;
+      }
+    }
+
+    function updateBuzzerUi() {
+      const label = buzzerEnabled ? 'ON' : 'OFF';
+      if (buzzerChipStateEl) buzzerChipStateEl.textContent = label;
+      if (buzzerToggleEl) {
+        buzzerToggleEl.textContent = `Buzzer: ${label}`;
+        buzzerToggleEl.classList.toggle('off', !buzzerEnabled);
+      }
+    }
+
+    function setBuzzerEnabled(enabled) {
+      buzzerEnabled = Boolean(enabled);
+      safeSet('bbs_buzzer_enabled', buzzerEnabled ? '1' : '0');
+      updateBuzzerUi();
+      setCommandFeedback(`Buzzer ${buzzerEnabled ? 'enabled' : 'muted'}`, buzzerEnabled ? '#facc15' : '#94a3b8');
+    }
+
+    function playOpportunityBuzzer() {
+      if (!buzzerEnabled) return;
+      try {
+        if (!audioCtx) {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          if (!Ctx) return;
+          audioCtx = new Ctx();
+        }
+        const now = audioCtx.currentTime;
+        [0, 0.18, 0.36].forEach((offset, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.value = i % 2 === 0 ? 860 : 1120;
+          gain.gain.setValueAtTime(0.0001, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.08, now + offset + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.12);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + offset);
+          osc.stop(now + offset + 0.14);
+        });
+      } catch (err) {
+        // Audio may be blocked before first user interaction.
+      }
     }
 
     function setCommandFeedback(message, color = 'rgba(148,163,184,1)') {
@@ -1901,6 +2329,8 @@
         dayHigh: Math.max(base, dayOpen),
         dayLow: Math.min(base, dayOpen),
         volume: Math.floor(500000 + Math.random() * 3000000),
+        volumeStep: 0,
+        lastStepPct: 0,
         volatility: 0.02 + Math.random() * 0.02,
         history: createHistory(base),
         apiCandles: null
@@ -2114,6 +2544,73 @@
         setCommandFeedback(`${hitCount} alert(s) triggered`, '#facc15');
       }
       renderAlerts();
+    }
+
+    function renderOpportunityFeed() {
+      if (!opportunityFeedEl) return;
+      if (!opportunityFeed.length) {
+        opportunityFeedEl.innerHTML = '<div class="alert-row"><span>No high-conviction setups yet</span><span>—</span></div>';
+        return;
+      }
+      opportunityFeedEl.innerHTML = opportunityFeed
+        .slice(0, 12)
+        .map((item) => `
+          <div class="alert-row triggered">
+            <span>${escapeHtml(item.symbol)} ${escapeHtml(item.reason)}</span>
+            <span>${escapeHtml(item.time)}</span>
+          </div>
+        `)
+        .join('');
+    }
+
+    function triggerOpportunity(payload) {
+      lastOpportunityAt = Date.now();
+      opportunityFeed.unshift({
+        symbol: payload.symbol,
+        reason: payload.reason,
+        time: nowTimeLabel()
+      });
+      if (opportunityFeed.length > 30) opportunityFeed.pop();
+
+      if (opportunityStatusEl) {
+        opportunityStatusEl.textContent = `OPPORTUNITY: ${payload.symbol} ${payload.reason}`;
+      }
+      setCommandFeedback(`Opportunity buzzer: ${payload.symbol} ${payload.reason}`, '#facc15');
+      pushHeadline(`Opportunity scanner triggered: ${payload.symbol} ${payload.reason}`, 'BBS Scanner');
+      renderOpportunityFeed();
+      playOpportunityBuzzer();
+
+      if (appRootEl) {
+        appRootEl.classList.remove('opportunity-flash');
+        void appRootEl.offsetWidth;
+        appRootEl.classList.add('opportunity-flash');
+      }
+    }
+
+    function detectOpportunities() {
+      const now = Date.now();
+      if (now - lastOpportunityAt < opportunityCooldownMs) return;
+
+      let best = null;
+      watchData.forEach((item) => {
+        const st = ensureSymbol(item.symbol);
+        const dayPct = st.prevClose ? ((st.price - st.prevClose) / st.prevClose) * 100 : 0;
+        const momentum = Math.abs(st.lastStepPct || 0);
+        const flowScore = (st.volumeStep || 0) / 4500;
+        const score = Math.abs(dayPct) + momentum + flowScore;
+
+        if (Math.abs(dayPct) < 1.4 || score < 5.3) return;
+        if (!best || score > best.score) {
+          best = {
+            symbol: item.symbol,
+            score,
+            dayPct,
+            reason: `${formatPct(dayPct)} with flow spike`
+          };
+        }
+      });
+
+      if (best) triggerOpportunity(best);
     }
 
     function generateMockOrderBook(basePrice) {
@@ -2339,10 +2836,13 @@
       watchData.forEach((item) => {
         const st = ensureSymbol(item.symbol);
         const stepPct = jitter(st.volatility);
+        const prevVolume = st.volume;
         st.price = Math.max(1, st.price * (1 + stepPct));
         st.dayHigh = Math.max(st.dayHigh, st.price);
         st.dayLow = Math.min(st.dayLow, st.price);
         st.volume += Math.floor(1000 + Math.random() * 13000);
+        st.volumeStep = st.volume - prevVolume;
+        st.lastStepPct = stepPct * 100;
         st.history.push(st.price);
         if (st.history.length > 380) st.history.shift();
         item.price = st.price;
@@ -2485,13 +2985,28 @@
           switchWorkspace('trade');
           setCommandFeedback('TRADE: order entry open', '#38bdf8');
         },
+        CONS: () => {
+          switchWorkspace('consultant');
+          setCommandFeedback('CONS: AI consultant open', '#38bdf8');
+        },
+        AI: () => {
+          switchWorkspace('consultant');
+          setCommandFeedback('AI: consultant workspace open', '#38bdf8');
+        },
         ALRT: () => {
           alertSymbolEl.value = activeSymbol;
           alertPriceEl.focus();
           setCommandFeedback('ALRT: enter threshold and add alert', '#38bdf8');
         },
+        BEEP: () => {
+          setBuzzerEnabled(!buzzerEnabled);
+        },
+        SETAI: () => {
+          window.open('ai-settings.html', '_blank');
+          setCommandFeedback('SETAI: opening AI settings page', '#38bdf8');
+        },
         HELP: () => {
-          setCommandFeedback('Commands: TOP WEI ECO PORT BLT TRADE ALRT HELP 1D 5D 1M 3M <SYMBOL>', '#38bdf8');
+          setCommandFeedback('Commands: TOP WEI ECO PORT BLT TRADE CONS AI ALRT BEEP SETAI HELP 1D 5D 1M 3M <SYMBOL>', '#38bdf8');
         },
         N: () => {
           switchWorkspace('news');
@@ -2591,6 +3106,27 @@
         terminalCommandEl.value = '';
       });
 
+      consultantSendEl?.addEventListener('click', () => {
+        sendConsultantMessage();
+      });
+
+      consultantInputEl?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendConsultantMessage();
+        }
+      });
+
+      consultantClearEl?.addEventListener('click', () => {
+        consultantMessages.length = 0;
+        addConsultantMessage('assistant', 'Conversation cleared. Ask for setups, risk, or macro interpretation.');
+        setConsultantStatus('READY', '#93c5fd');
+      });
+
+      buzzerToggleEl?.addEventListener('click', () => {
+        setBuzzerEnabled(!buzzerEnabled);
+      });
+
       workspaceTabs.forEach((tab) => {
         tab.addEventListener('click', () => switchWorkspace(tab.dataset.view));
       });
@@ -2631,6 +3167,12 @@
           terminalCommandEl.focus();
         }
       });
+
+      window.addEventListener('storage', (event) => {
+        if (event.key && event.key.startsWith('bbs_ai_')) {
+          refreshConsultantConfigUI();
+        }
+      });
     }
 
     function marketLoop() {
@@ -2638,6 +3180,7 @@
       tickMacroAssets();
       maybePushHeadline();
       checkAlerts();
+      detectOpportunities();
       renderWatchlist();
       renderMarketTape();
       renderMarketMatrix();
@@ -2647,14 +3190,19 @@
     }
 
     bootstrapState();
+    buzzerEnabled = safeGet('bbs_buzzer_enabled', '1') !== '0';
     renderFunctionGrid();
     renderEconomicCalendar();
     renderAlerts();
+    renderOpportunityFeed();
     renderBlotter();
     renderNews();
     renderMarketMatrix();
     renderMarketTape();
     renderPositions();
+    updateBuzzerUi();
+    refreshConsultantConfigUI();
+    addConsultantMessage('assistant', 'BBS Consultant online. Ask for trade plans, macro context, or risk-adjusted entries.');
     switchWorkspace(activeWorkspace);
     setFeedStatus('SIM');
     wireEvents();
@@ -2663,6 +3211,7 @@
 
     setInterval(marketLoop, 2600);
     setInterval(() => syncFromApi(activeSymbol), 25000);
+    setInterval(refreshConsultantConfigUI, 4000);
     syncFromApi(activeSymbol);
   </script>
 </body>
