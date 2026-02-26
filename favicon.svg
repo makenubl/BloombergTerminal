@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BBS Terminal">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#12325d"/>
+      <stop offset="100%" stop-color="#0a1527"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bg)" stroke="#66b3ff" stroke-width="2"/>
+  <circle cx="50" cy="14" r="8" fill="none" stroke="#35d3ff" stroke-opacity="0.6" stroke-width="2"/>
+  <circle cx="14" cy="50" r="8" fill="none" stroke="#ff9553" stroke-opacity="0.6" stroke-width="2"/>
+  <text x="32" y="40" text-anchor="middle" fill="#eef6ff" font-family="Arial, sans-serif" font-size="22" font-weight="700">BBS</text>
+</svg>
