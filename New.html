@@ -3082,7 +3082,7 @@
       let live = false;
       const st = ensureSymbol(symbol);
       try {
-        const quote = await fetchJsonWithTimeout(`http://localhost:4000/api/quote?symbol=${encodeURIComponent(symbol)}`);
+        const quote = await fetchJsonWithTimeout(`/api/quote?symbol=${encodeURIComponent(symbol)}`);
         const px = Number(quote.price);
         if (Number.isFinite(px) && px > 0) {
           st.price = px;
@@ -3101,7 +3101,7 @@
       }
 
       try {
-        const intraday = await fetchJsonWithTimeout(`http://localhost:4000/api/intraday?symbol=${encodeURIComponent(symbol)}&interval=5min`);
+        const intraday = await fetchJsonWithTimeout(`/api/intraday?symbol=${encodeURIComponent(symbol)}&interval=5m&range=1d`);
         if (Array.isArray(intraday.candles) && intraday.candles.length > 4) {
           st.apiCandles = intraday.candles
             .map((c) => ({
