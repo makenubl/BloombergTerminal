@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloomberg Terminal X</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient-glow"></div>
+  <div class="ambient-grid"></div>
+  <main class="terminal-shell">
+    <header class="top-bar">
+      <div class="brand">BLOOMBERG // TERMINAL X</div>
+      <div class="status">
+        <span class="pill live">LIVE</span>
+        <span class="time" id="live-time">--:--:--</span>
+      </div>
+    </header>
+
+    <section class="ticker-wrap" aria-label="Market ticker">
+      <div class="ticker-track" id="ticker-track"></div>
+    </section>
+
+    <section class="workspace">
+      <aside class="left-rail">
+        <h2>Functions</h2>
+        <ul>
+          <li>ECO</li>
+          <li>WEI</li>
+          <li>TOP</li>
+          <li>BI</li>
+          <li>FXIP</li>
+          <li>CRYP</li>
+          <li>SPLC</li>
+        </ul>
+      </aside>
+
+      <div class="center-grid">
+        <article class="panel panel-headline">
+          <div class="panel-title">Global Headlines</div>
+          <p id="headline-text">Loading latest market intelligence...</p>
+        </article>
+
+        <article class="panel panel-heat">
+          <div class="panel-title">Macro Heatmap</div>
+          <div class="heatmap">
+            <span class="hot">US10Y +7bp</span>
+            <span class="warm">DXY +0.31%</span>
+            <span class="cold">EURUSD -0.42%</span>
+            <span class="hot">WTI +1.9%</span>
+            <span class="cold">Gold -0.8%</span>
+            <span class="warm">BTC +2.2%</span>
+          </div>
+        </article>
+
+        <article class="panel panel-table">
+          <div class="panel-title">Top Movers</div>
+          <table>
+            <thead>
+              <tr><th>Symbol</th><th>Price</th><th>Chg</th></tr>
+            </thead>
+            <tbody id="movers-body"></tbody>
+          </table>
+        </article>
+
+        <article class="panel panel-chart">
+          <div class="panel-title">Synthetic Intraday Curve</div>
+          <svg viewBox="0 0 520 190" role="img" aria-label="Intraday chart">
+            <defs>
+              <linearGradient id="curveGrad" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#ff6a00" stop-opacity="0.75"></stop>
+                <stop offset="100%" stop-color="#ff6a00" stop-opacity="0.05"></stop>
+              </linearGradient>
+            </defs>
+            <polyline id="curve-line" fill="none" stroke="#ff8a3c" stroke-width="3"></polyline>
+            <polygon id="curve-area" fill="url(#curveGrad)"></polygon>
+          </svg>
+        </article>
+      </div>
+    </section>
+
+    <footer class="command-bar">
+      <label for="cmd-input">Command</label>
+      <input id="cmd-input" type="text" autocomplete="off" placeholder="Type function: TOP, WEI, ECO, BI..." />
+      <button id="cmd-run">RUN</button>
+      <span id="cmd-feedback" aria-live="polite"></span>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
