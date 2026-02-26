@@ -938,6 +938,75 @@
       justify-content: space-between;
     }
 
+    .x-impact-wrap {
+      margin-top: 10px;
+      border-top: 1px solid rgba(30, 64, 175, 0.45);
+      padding-top: 9px;
+    }
+
+    .x-impact-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .x-impact-title {
+      font-family: var(--font-family-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #93c5fd;
+    }
+
+    .x-impact-status {
+      font-family: var(--font-family-mono);
+      font-size: 10px;
+      color: rgba(148, 163, 184, 1);
+      border: 1px solid rgba(30, 64, 175, 0.45);
+      border-radius: 999px;
+      padding: 3px 8px;
+    }
+
+    .x-impact-controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .x-impact-list {
+      margin-top: 7px;
+      max-height: 190px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .x-impact-item {
+      border-bottom: 1px solid rgba(30, 64, 175, 0.35);
+      padding: 7px 4px;
+    }
+
+    .x-impact-text {
+      font-size: 11px;
+      color: rgba(226, 232, 240, 0.96);
+      line-height: 1.4;
+      margin-bottom: 4px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .x-impact-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 10px;
+      font-family: var(--font-family-mono);
+      color: rgba(148, 163, 184, 1);
+      flex-wrap: wrap;
+    }
+
     .summary-card {
       border-radius: 10px;
       background: radial-gradient(circle at center, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.98));
@@ -1170,7 +1239,7 @@
 
     .workspace-tabs {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 5px;
     }
 
@@ -1378,6 +1447,101 @@
       min-width: 70px;
     }
 
+    .video-card {
+      border-color: rgba(99, 102, 241, 0.45);
+    }
+
+    .video-meta {
+      margin-top: 6px;
+      font-family: var(--font-family-mono);
+      font-size: 10px;
+      color: rgba(148, 163, 184, 1);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .video-controls {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: 1fr 0.9fr auto auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .video-controls.secondary {
+      grid-template-columns: 1fr 1fr auto;
+    }
+
+    .video-status {
+      margin-top: 8px;
+      border: 1px solid rgba(79, 70, 229, 0.55);
+      background: rgba(49, 46, 129, 0.16);
+      color: #c7d2fe;
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-family: var(--font-family-mono);
+      font-size: 10px;
+    }
+
+    .team-preview {
+      margin-top: 6px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .team-chip {
+      border: 1px solid rgba(99, 102, 241, 0.55);
+      background: rgba(49, 46, 129, 0.16);
+      color: #c7d2fe;
+      border-radius: 999px;
+      font-family: var(--font-family-mono);
+      font-size: 10px;
+      padding: 3px 8px;
+    }
+
+    .video-frame-wrap {
+      margin-top: 8px;
+      border: 1px solid rgba(99, 102, 241, 0.55);
+      border-radius: 8px;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #0b1024, #050914);
+      min-height: 360px;
+      position: relative;
+    }
+
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      color: rgba(148, 163, 184, 1);
+      font-family: var(--font-family-mono);
+      font-size: 11px;
+      letter-spacing: 0.03em;
+    }
+
+    .video-frame {
+      width: 100%;
+      height: 420px;
+      border: 0;
+      display: none;
+      background: #000;
+    }
+
+    .video-frame.live {
+      display: block;
+    }
+
+    .video-placeholder.hidden {
+      display: none;
+    }
+
     .app-root.opportunity-flash {
       animation: opportunityFlash 0.8s ease-out;
     }
@@ -1526,6 +1690,10 @@
       .workspace-tabs {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
+      .video-controls,
+      .video-controls.secondary {
+        grid-template-columns: 1fr;
+      }
       .consultant-input-row {
         grid-template-columns: 1fr;
       }
@@ -1560,7 +1728,7 @@
         <input
           id="symbol-input"
           class="search-input"
-          placeholder="Type symbol or command (AAPL, TOP, ECO, BLT, PORT) and press Enter"
+          placeholder="Type symbol or command (AAPL, TOP, ECO, BLT, XFEED, IMPACT, VID, JOIN desk-room) and press Enter"
         />
       </div>
       <div class="top-meta">
@@ -1583,6 +1751,10 @@
         <div class="top-chip">
           <span class="top-chip-label">AI</span>
           <a class="top-link" href="ai-settings.html">SETTINGS</a>
+        </div>
+        <div class="top-chip">
+          <span class="top-chip-label">LAB</span>
+          <a class="top-link" href="impact-lab.html">IMPACT</a>
         </div>
       </div>
     </div>
@@ -1740,6 +1912,7 @@
             <button class="workspace-tab" data-view="calendar">Calendar</button>
             <button class="workspace-tab" data-view="summary">Summary</button>
             <button class="workspace-tab" data-view="consultant">Consultant</button>
+            <button class="workspace-tab" data-view="video">Video</button>
           </div>
 
           <div class="workspace-view active" data-view="trade" id="view-trade">
@@ -1844,6 +2017,17 @@
                 <span style="font-size:10px;color:rgba(148,163,184,1);">TOP</span>
               </div>
               <div class="news-list scroll-y" id="news-list"></div>
+              <div class="x-impact-wrap">
+                <div class="x-impact-head">
+                  <div class="x-impact-title">X IMPACT FEED</div>
+                  <div class="x-impact-status" id="x-impact-status">SYNC: STANDBY</div>
+                </div>
+                <div class="x-impact-controls">
+                  <input id="x-impact-handles" class="command-input" placeholder="Handles: elonmusk,sama,cathiedwood,claudeai" />
+                  <button id="x-impact-refresh" class="command-run" type="button">REFRESH</button>
+                </div>
+                <div class="x-impact-list scroll-y" id="x-impact-list"></div>
+              </div>
             </section>
           </div>
 
@@ -1887,13 +2071,51 @@
               </div>
             </section>
           </div>
+
+          <div class="workspace-view" data-view="video" id="view-video">
+            <section class="news-card video-card" style="height:auto;">
+              <div class="card-header">
+                <div class="card-title">TEAM VIDEO</div>
+                <span style="font-size:10px;color:#a5b4fc;">JITSI</span>
+              </div>
+              <div class="video-meta">
+                <span>Open source room conferencing</span>
+                <span>Commands: VID, VIDEO, JOIN &lt;ROOM&gt;</span>
+              </div>
+              <div class="video-controls">
+                <input id="video-room" class="command-input" placeholder="Room (example: bbs-desk)" />
+                <input id="video-name" class="command-input" placeholder="Your display name" />
+                <button id="video-join" class="command-run" type="button">JOIN</button>
+                <button id="video-leave" class="function-btn" type="button">LEAVE</button>
+              </div>
+              <div class="video-controls secondary">
+                <input id="video-team" class="command-input" placeholder="Teammates (comma separated)" />
+                <input id="video-invite" class="command-input" readonly />
+                <button id="video-copy" class="command-run" type="button">COPY LINK</button>
+              </div>
+              <div class="team-preview" id="video-team-preview"></div>
+              <div class="video-status" id="video-status">STANDBY: set room and join to start live video.</div>
+              <div class="video-frame-wrap">
+                <div class="video-placeholder" id="video-placeholder">
+                  Team video is off. Join a room to enable camera/mic collaboration inside this terminal workspace.
+                </div>
+                <iframe
+                  id="video-frame"
+                  class="video-frame"
+                  title="BBS Team Video"
+                  allow="camera; microphone; fullscreen; display-capture; autoplay"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                ></iframe>
+              </div>
+            </section>
+          </div>
         </div>
       </aside>
     </div>
 
     <div class="command-line">
       <span class="command-prefix">Terminal</span>
-      <input id="terminal-command" class="command-input" placeholder="Run function: HELP, TOP, ECO, PORT, BLT, CONS, ALRT, BEEP, SETAI, AAPL" />
+      <input id="terminal-command" class="command-input" placeholder="Run function: HELP, TOP, ECO, PORT, BLT, CONS, XFEED, IMPACT, VID, JOIN <ROOM>, ALRT, BEEP, SETAI, AAPL" />
       <button id="command-run" class="command-run">RUN</button>
       <span id="command-feedback" class="command-feedback">READY</span>
     </div>
@@ -1924,12 +2146,15 @@
 
     const functionCards = [
       { code: 'TOP', label: 'Headlines', view: 'news' },
+      { code: 'XFEED', label: 'X Impact', view: 'news' },
+      { code: 'IMPACT', label: 'Impact Radar', view: 'news' },
       { code: 'WEI', label: 'World Markets', view: 'summary' },
       { code: 'ECO', label: 'Calendar', view: 'calendar' },
       { code: 'BLT', label: 'Blotter', view: 'blotter' },
       { code: 'PORT', label: 'Portfolio', view: 'summary' },
       { code: 'TRADE', label: 'Trade Ticket', view: 'trade' },
       { code: 'CONS', label: 'AI Consultant', view: 'consultant' },
+      { code: 'VID', label: 'Team Video', view: 'video' },
       { code: 'ALRT', label: 'Alerts', view: 'trade' },
       { code: 'BEEP', label: 'Buzzer Toggle', view: 'trade' },
       { code: 'SETAI', label: 'AI Settings', view: 'consultant' },
@@ -1952,6 +2177,8 @@
       { title: 'Flow monitor flags broad ETF inflows in growth complex', time: '08:22', source: 'Flow Desk' }
     ];
 
+    const defaultXImpactHandles = ['elonmusk', 'sama', 'cathiedwood', 'federalreserve', 'claudeai'];
+
     const positions = [
       { symbol: 'AAPL', qty: 10, avg: 220.5 },
       { symbol: 'TSLA', qty: 5, avg: 189.0 }
@@ -1971,8 +2198,11 @@
     let consultantBusy = false;
     let buzzerEnabled = true;
     let lastOpportunityAt = 0;
+    let activeVideoRoom = '';
+    let xImpactMode = 'SIM';
     let audioCtx = null;
     let opportunityFeed = [];
+    let xImpactFeed = [];
     const consultantMessages = [];
 
     const rangePoints = { '1D': 72, '5D': 120, '1M': 180, '3M': 240 };
@@ -2021,6 +2251,10 @@
     const metricPrevEl = document.getElementById('metric-prev');
 
     const newsListEl = document.getElementById('news-list');
+    const xImpactListEl = document.getElementById('x-impact-list');
+    const xImpactStatusEl = document.getElementById('x-impact-status');
+    const xImpactHandlesEl = document.getElementById('x-impact-handles');
+    const xImpactRefreshEl = document.getElementById('x-impact-refresh');
     const econListEl = document.getElementById('econ-list');
     const aiStatusEl = document.getElementById('ai-status');
     const summaryBodyEl = document.getElementById('summary-body');
@@ -2046,6 +2280,17 @@
     const consultantInputEl = document.getElementById('consultant-input');
     const consultantSendEl = document.getElementById('consultant-send');
     const consultantClearEl = document.getElementById('consultant-clear');
+    const videoRoomEl = document.getElementById('video-room');
+    const videoNameEl = document.getElementById('video-name');
+    const videoTeamEl = document.getElementById('video-team');
+    const videoInviteEl = document.getElementById('video-invite');
+    const videoJoinEl = document.getElementById('video-join');
+    const videoLeaveEl = document.getElementById('video-leave');
+    const videoCopyEl = document.getElementById('video-copy');
+    const videoStatusEl = document.getElementById('video-status');
+    const videoTeamPreviewEl = document.getElementById('video-team-preview');
+    const videoPlaceholderEl = document.getElementById('video-placeholder');
+    const videoFrameEl = document.getElementById('video-frame');
 
     const workspaceTabs = document.querySelectorAll('.workspace-tab');
     const workspaceViews = document.querySelectorAll('.workspace-view');
@@ -2103,9 +2348,226 @@
         .replaceAll("'", '&#39;');
     }
 
+    function sanitizeXHandle(raw) {
+      return String(raw || '')
+        .trim()
+        .toLowerCase()
+        .replace(/^@+/, '')
+        .replace(/[^a-z0-9_]/g, '')
+        .slice(0, 15);
+    }
+
+    function parseXHandles(raw) {
+      const source = String(raw || '')
+        .split(',')
+        .map((item) => sanitizeXHandle(item))
+        .filter(Boolean);
+      const out = [];
+      source.forEach((handle) => {
+        if (!out.includes(handle)) out.push(handle);
+      });
+      return out.slice(0, 12);
+    }
+
+    function setXImpactStatus(text, color = 'rgba(148, 163, 184, 1)') {
+      if (!xImpactStatusEl) return;
+      xImpactStatusEl.textContent = text;
+      xImpactStatusEl.style.color = color;
+    }
+
+    function renderXImpactFeed() {
+      if (!xImpactListEl) return;
+      if (!xImpactFeed.length) {
+        xImpactListEl.innerHTML = '<div class="x-impact-item"><div class="x-impact-text">No tweets loaded yet. Run XREF to sync.</div></div>';
+        return;
+      }
+      xImpactListEl.innerHTML = xImpactFeed
+        .slice(0, 24)
+        .map((item) => {
+          const text = escapeHtml(item.text || '');
+          const handle = escapeHtml(item.handle || 'unknown');
+          const when = escapeHtml(item.time || nowTimeLabel());
+          const src = escapeHtml(item.source || 'X');
+          const likes = Number.isFinite(Number(item.likes)) ? ` ❤ ${formatCompact(item.likes)}` : '';
+          const reposts = Number.isFinite(Number(item.reposts)) ? ` ↻ ${formatCompact(item.reposts)}` : '';
+          const link = item.url ? `<a class="top-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Open</a>` : '';
+          return `
+            <div class="x-impact-item">
+              <div class="x-impact-text">${text}</div>
+              <div class="x-impact-meta">
+                <span>@${handle} • ${when} • ${src}${likes}${reposts}</span>
+                <span>${link}</span>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    function buildLocalXImpactFallback(handles) {
+      const ideas = [
+        'AI infrastructure narrative strengthening; watch semis and cloud beta.',
+        'Macro tone shifting into event risk; keep sizing disciplined near data drops.',
+        'Energy and logistics chatter may spill into cyclicals and transport names.',
+        'Founder commentary can move high-beta tech fast; monitor momentum follow-through.',
+        'Policy communication watch: rate-sensitive sectors can reprice quickly.'
+      ];
+      const now = Date.now();
+      return handles.slice(0, 8).map((handle, idx) => ({
+        handle,
+        text: `${handle}: ${ideas[idx % ideas.length]}`,
+        time: new Date(now - idx * 14 * 60 * 1000).toISOString(),
+        url: `https://x.com/${encodeURIComponent(handle)}`,
+        source: 'BBS Fallback'
+      }));
+    }
+
+    async function syncXImpactFeed(force = false) {
+      if (!xImpactHandlesEl) return;
+      const handles = parseXHandles(xImpactHandlesEl.value);
+      if (!handles.length) {
+        setXImpactStatus('SYNC: ADD HANDLES', '#facc15');
+        return;
+      }
+      xImpactHandlesEl.value = handles.join(',');
+      safeSet('bbs_x_handles', handles.join(','));
+      setXImpactStatus('SYNC: FETCHING...', '#facc15');
+
+      const query = new URLSearchParams();
+      query.set('handles', handles.join(','));
+      query.set('limit', '4');
+      if (force) query.set('t', `${Date.now()}`);
+
+      try {
+        const payload = await fetchJsonWithTimeout(`/api/x-impact?${query.toString()}`, 9000);
+        const items = Array.isArray(payload.items) ? payload.items : [];
+        xImpactFeed = items;
+        xImpactMode = payload.mode || 'SIM';
+        renderXImpactFeed();
+        const modeColor = xImpactMode === 'LIVE' ? '#86efac' : '#facc15';
+        setXImpactStatus(`SYNC: ${xImpactMode} • ${items.length} POSTS`, modeColor);
+      } catch (err) {
+        xImpactFeed = buildLocalXImpactFallback(handles);
+        xImpactMode = 'SIM';
+        renderXImpactFeed();
+        setXImpactStatus('SYNC: SIM FALLBACK', '#facc15');
+      }
+    }
+
     function getDefaultEndpoint(provider) {
       if (provider === 'openai') return 'https://api.openai.com/v1/chat/completions';
       return '';
+    }
+
+    function sanitizeRoomName(raw) {
+      return String(raw || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 64);
+    }
+
+    function buildVideoInviteUrl(room) {
+      return `https://meet.jit.si/${encodeURIComponent(room)}`;
+    }
+
+    function buildJitsiUrl(room, displayName) {
+      const hash = new URLSearchParams();
+      hash.set('config.prejoinPageEnabled', 'true');
+      hash.set('config.startWithAudioMuted', 'false');
+      hash.set('config.startWithVideoMuted', 'false');
+      if (displayName) {
+        hash.set('userInfo.displayName', JSON.stringify(displayName.slice(0, 48)));
+      }
+      return `${buildVideoInviteUrl(room)}#${hash.toString()}`;
+    }
+
+    function setVideoStatus(text, color = '#c7d2fe') {
+      if (!videoStatusEl) return;
+      videoStatusEl.textContent = text;
+      videoStatusEl.style.color = color;
+    }
+
+    function renderTeamPreview() {
+      if (!videoTeamPreviewEl || !videoTeamEl) return;
+      const names = videoTeamEl.value
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .slice(0, 12);
+      if (!names.length) {
+        videoTeamPreviewEl.innerHTML = '';
+        return;
+      }
+      videoTeamPreviewEl.innerHTML = names.map((name) => `<span class="team-chip">${escapeHtml(name)}</span>`).join('');
+    }
+
+    function saveVideoDraft() {
+      if (videoRoomEl) safeSet('bbs_video_room', sanitizeRoomName(videoRoomEl.value) || 'bbs-desk');
+      if (videoNameEl) safeSet('bbs_video_name', videoNameEl.value.trim().slice(0, 48));
+      if (videoTeamEl) safeSet('bbs_video_team', videoTeamEl.value.trim().slice(0, 240));
+    }
+
+    function initVideoWorkspace() {
+      if (!videoRoomEl) return;
+      const savedRoom = sanitizeRoomName(safeGet('bbs_video_room', 'bbs-desk')) || 'bbs-desk';
+      const savedName = safeGet('bbs_video_name', '');
+      const savedTeam = safeGet('bbs_video_team', '');
+      videoRoomEl.value = savedRoom;
+      if (videoNameEl) videoNameEl.value = savedName;
+      if (videoTeamEl) videoTeamEl.value = savedTeam;
+      if (videoInviteEl) videoInviteEl.value = buildVideoInviteUrl(savedRoom);
+      renderTeamPreview();
+      setVideoStatus('STANDBY: set room and join to start live video.');
+    }
+
+    function joinVideoRoom(roomOverride = '') {
+      if (!videoRoomEl || !videoInviteEl || !videoFrameEl || !videoPlaceholderEl) return;
+      const room = sanitizeRoomName(roomOverride || videoRoomEl.value) || 'bbs-desk';
+      const displayName = (videoNameEl?.value || '').trim();
+      activeVideoRoom = room;
+      videoRoomEl.value = room;
+      const invite = buildVideoInviteUrl(room);
+      videoInviteEl.value = invite;
+      videoFrameEl.src = buildJitsiUrl(room, displayName);
+      videoFrameEl.classList.add('live');
+      videoPlaceholderEl.classList.add('hidden');
+      setVideoStatus(`LIVE: room ${room.toUpperCase()} connected.`, '#a5b4fc');
+      saveVideoDraft();
+    }
+
+    function leaveVideoRoom() {
+      if (!videoFrameEl || !videoPlaceholderEl) return;
+      activeVideoRoom = '';
+      videoFrameEl.src = '';
+      videoFrameEl.classList.remove('live');
+      videoPlaceholderEl.classList.remove('hidden');
+      setVideoStatus('OFFLINE: video room disconnected.', '#94a3b8');
+    }
+
+    async function copyVideoInviteLink() {
+      const room = sanitizeRoomName(videoRoomEl?.value || activeVideoRoom) || 'bbs-desk';
+      const url = buildVideoInviteUrl(room);
+      if (videoInviteEl) videoInviteEl.value = url;
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url);
+        } else if (videoInviteEl) {
+          videoInviteEl.focus();
+          videoInviteEl.select();
+          document.execCommand('copy');
+        } else {
+          throw new Error('Clipboard unavailable');
+        }
+        setVideoStatus('Invite link copied.', '#86efac');
+        setCommandFeedback('Video invite link copied', '#86efac');
+      } catch (err) {
+        setVideoStatus('Copy blocked. Select and copy the invite field manually.', '#facc15');
+        setCommandFeedback('Clipboard blocked by browser permissions', '#facc15');
+      }
     }
 
     function getAIConfig() {
@@ -2980,11 +3442,26 @@
       const raw = (rawInput || '').trim();
       if (!raw) return;
       const cmd = raw.replace(/^\//, '').toUpperCase();
+      const joinMatch = raw.match(/^\/?JOIN\s+(.+)$/i);
+      const xSetMatch = raw.match(/^\/?XSET\s+(.+)$/i);
 
       const handlers = {
         TOP: () => {
           switchWorkspace('news');
           setCommandFeedback('TOP: headlines workspace open', '#38bdf8');
+        },
+        XFEED: () => {
+          switchWorkspace('news');
+          xImpactHandlesEl?.focus();
+          setCommandFeedback('XFEED: impact account monitor open', '#38bdf8');
+        },
+        XREF: () => {
+          syncXImpactFeed(true);
+          setCommandFeedback('XREF: refreshing X impact feed', '#38bdf8');
+        },
+        IMPACT: () => {
+          window.open('impact-lab.html', '_blank');
+          setCommandFeedback('IMPACT: opening provider impact radar', '#38bdf8');
         },
         WEI: () => {
           switchWorkspace('summary');
@@ -3014,6 +3491,14 @@
           switchWorkspace('consultant');
           setCommandFeedback('AI: consultant workspace open', '#38bdf8');
         },
+        VID: () => {
+          switchWorkspace('video');
+          setCommandFeedback('VID: team video workspace open', '#a5b4fc');
+        },
+        VIDEO: () => {
+          switchWorkspace('video');
+          setCommandFeedback('VIDEO: team video workspace open', '#a5b4fc');
+        },
         ALRT: () => {
           alertSymbolEl.value = activeSymbol;
           alertPriceEl.focus();
@@ -3027,7 +3512,7 @@
           setCommandFeedback('SETAI: opening AI settings page', '#38bdf8');
         },
         HELP: () => {
-          setCommandFeedback('Commands: TOP WEI ECO PORT BLT TRADE CONS AI ALRT BEEP SETAI HELP 1D 5D 1M 3M <SYMBOL>', '#38bdf8');
+          setCommandFeedback('Commands: TOP XFEED XREF XSET <handles> IMPACT WEI ECO PORT BLT TRADE CONS AI VID VIDEO JOIN <ROOM> ALRT BEEP SETAI HELP 1D 5D 1M 3M <SYMBOL>', '#38bdf8');
         },
         N: () => {
           switchWorkspace('news');
@@ -3041,6 +3526,24 @@
       }
       if (handlers[cmd]) {
         handlers[cmd]();
+        return;
+      }
+      if (joinMatch) {
+        const room = sanitizeRoomName(joinMatch[1]) || 'bbs-desk';
+        switchWorkspace('video');
+        joinVideoRoom(room);
+        setCommandFeedback(`JOIN: room ${room.toUpperCase()} live`, '#a5b4fc');
+        return;
+      }
+      if (xSetMatch) {
+        const handles = parseXHandles(xSetMatch[1]);
+        if (!handles.length) {
+          setCommandFeedback('XSET needs valid handles (example: XSET elonmusk,sama,claudeai)', '#f97373');
+          return;
+        }
+        if (xImpactHandlesEl) xImpactHandlesEl.value = handles.join(',');
+        syncXImpactFeed(true);
+        setCommandFeedback(`XSET: monitoring @${handles.slice(0, 4).join(', @')}`, '#38bdf8');
         return;
       }
       if (/^[A-Z][A-Z0-9.\-]{0,7}$/.test(cmd)) {
@@ -3159,6 +3662,75 @@
         setConsultantStatus('READY', '#93c5fd');
       });
 
+      xImpactHandlesEl?.addEventListener('input', () => {
+        safeSet('bbs_x_handles', String(xImpactHandlesEl.value || '').slice(0, 260));
+      });
+
+      xImpactHandlesEl?.addEventListener('blur', () => {
+        const handles = parseXHandles(xImpactHandlesEl.value);
+        if (!handles.length) return;
+        xImpactHandlesEl.value = handles.join(',');
+        safeSet('bbs_x_handles', handles.join(','));
+      });
+
+      xImpactHandlesEl?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          syncXImpactFeed(true);
+        }
+      });
+
+      xImpactRefreshEl?.addEventListener('click', () => {
+        syncXImpactFeed(true);
+      });
+
+      videoRoomEl?.addEventListener('input', () => {
+        const normalized = sanitizeRoomName(videoRoomEl.value);
+        if (normalized !== videoRoomEl.value) videoRoomEl.value = normalized;
+        const room = normalized || 'bbs-desk';
+        if (videoInviteEl) videoInviteEl.value = buildVideoInviteUrl(room);
+        saveVideoDraft();
+      });
+
+      videoRoomEl?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          joinVideoRoom();
+          setCommandFeedback(`JOIN: room ${(videoRoomEl.value || 'bbs-desk').toUpperCase()} live`, '#a5b4fc');
+        }
+      });
+
+      videoNameEl?.addEventListener('input', () => {
+        saveVideoDraft();
+      });
+
+      videoNameEl?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          joinVideoRoom();
+          setCommandFeedback(`JOIN: room ${(videoRoomEl?.value || 'bbs-desk').toUpperCase()} live`, '#a5b4fc');
+        }
+      });
+
+      videoTeamEl?.addEventListener('input', () => {
+        renderTeamPreview();
+        saveVideoDraft();
+      });
+
+      videoJoinEl?.addEventListener('click', () => {
+        joinVideoRoom();
+        setCommandFeedback(`JOIN: room ${(videoRoomEl?.value || 'bbs-desk').toUpperCase()} live`, '#a5b4fc');
+      });
+
+      videoLeaveEl?.addEventListener('click', () => {
+        leaveVideoRoom();
+        setCommandFeedback('Video room disconnected', '#94a3b8');
+      });
+
+      videoCopyEl?.addEventListener('click', () => {
+        copyVideoInviteLink();
+      });
+
       buzzerToggleEl?.addEventListener('click', () => {
         setBuzzerEnabled(!buzzerEnabled);
       });
@@ -3227,17 +3799,23 @@
 
     bootstrapState();
     buzzerEnabled = safeGet('bbs_buzzer_enabled', '1') !== '0';
+    const savedXHandles = parseXHandles(safeGet('bbs_x_handles', defaultXImpactHandles.join(',')));
+    if (xImpactHandlesEl) {
+      xImpactHandlesEl.value = (savedXHandles.length ? savedXHandles : defaultXImpactHandles).join(',');
+    }
     renderFunctionGrid();
     renderEconomicCalendar();
     renderAlerts();
     renderOpportunityFeed();
     renderBlotter();
     renderNews();
+    renderXImpactFeed();
     renderMarketMatrix();
     renderMarketTape();
     renderPositions();
     updateBuzzerUi();
     refreshConsultantConfigUI();
+    initVideoWorkspace();
     addConsultantMessage('assistant', 'BBS Consultant online. Ask for trade plans, macro context, or risk-adjusted entries.');
     switchWorkspace(activeWorkspace);
     setFeedStatus('SIM');
@@ -3247,8 +3825,10 @@
 
     setInterval(marketLoop, 2600);
     setInterval(() => syncFromApi(activeSymbol), 25000);
+    setInterval(() => syncXImpactFeed(false), 85000);
     setInterval(refreshConsultantConfigUI, 4000);
     syncFromApi(activeSymbol);
+    syncXImpactFeed(false);
   </script>
 </body>
 </html>

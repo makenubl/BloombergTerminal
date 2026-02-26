@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en" data-color-scheme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BBS Impact Radar</title>
+  <meta name="theme-color" content="#0b1f3f" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: rgba(15, 23, 42, 0.9);
+      --panel-2: rgba(2, 6, 23, 0.72);
+      --border: rgba(30, 64, 175, 0.6);
+      --ink: rgba(226, 232, 240, 0.95);
+      --muted: rgba(148, 163, 184, 1);
+      --accent: #38bdf8;
+      --ok: #4ade80;
+      --warn: #facc15;
+      --danger: #f87171;
+      --violet: #a5b4fc;
+      --font-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: "FKGroteskNeue", "Inter", "Segoe UI", sans-serif;
+    }
+
+    @font-face {
+      font-family: 'FKGroteskNeue';
+      src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Berkeley Mono';
+      src: url('https://r2cdn.perplexity.ai/fonts/BerkeleyMono.woff2') format('woff2');
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: radial-gradient(circle at 12% 0%, #1e3a8a 0%, #0f172a 38%, #020617 76%, #000 100%);
+      color: var(--ink);
+      font-family: var(--font-sans);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(56, 189, 248, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.07) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(circle at center, black 30%, transparent 90%);
+      opacity: 0.34;
+      animation: gridShift 15s linear infinite;
+    }
+
+    @keyframes gridShift {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(32px); }
+    }
+
+    .shell {
+      width: min(1380px, 96vw);
+      margin: 14px auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: linear-gradient(140deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.94));
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(56, 189, 248, 0.06);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .shell.flash {
+      animation: flashPulse 0.9s ease-out;
+    }
+
+    @keyframes flashPulse {
+      0% { box-shadow: 0 0 0 rgba(56, 189, 248, 0); }
+      35% { box-shadow: 0 0 50px rgba(248, 113, 113, 0.55), inset 0 0 0 1px rgba(248, 113, 113, 0.35); }
+      100% { box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(56, 189, 248, 0.06); }
+    }
+
+    .topbar {
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      background: linear-gradient(to right, #020617, #0b1120 45%, #020617);
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #22d3ee, #1d4ed8);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
+    }
+
+    .top-links {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .chip-link {
+      text-decoration: none;
+      border: 1px solid rgba(30, 64, 175, 0.65);
+      color: #bfdbfe;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      font-size: 10px;
+      padding: 4px 8px;
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .top-status {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      border: 1px solid rgba(55, 65, 81, 1);
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--muted);
+    }
+
+    .layout {
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 10px;
+      min-height: calc(100vh - 118px);
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 9px 10px;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.42);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #dbeafe;
+      font-family: var(--font-mono);
+    }
+
+    .panel-body {
+      padding: 10px;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .control-card {
+      border: 1px solid rgba(30, 64, 175, 0.5);
+      border-radius: 9px;
+      padding: 8px;
+      background: var(--panel-2);
+      display: grid;
+      gap: 6px;
+    }
+
+    .label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    .provider-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .provider-toggle {
+      border: 1px solid rgba(55, 65, 81, 1);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.85);
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .provider-toggle input {
+      margin: 0;
+      accent-color: #22d3ee;
+    }
+
+    .input,
+    .range,
+    .select {
+      width: 100%;
+      border: 1px solid rgba(55, 65, 81, 1);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 7px 9px;
+      outline: none;
+    }
+
+    .range {
+      padding: 0;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid rgba(55, 65, 81, 1);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      border-color: rgba(52, 211, 153, 0.8);
+      background: rgba(6, 78, 59, 0.86);
+      color: #bbf7d0;
+    }
+
+    .btn.warn {
+      border-color: rgba(248, 113, 113, 0.8);
+      background: rgba(127, 29, 29, 0.42);
+      color: #fecaca;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .toggle input {
+      accent-color: #f87171;
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+
+    .signals {
+      display: grid;
+      gap: 8px;
+    }
+
+    .signal {
+      border: 1px solid rgba(30, 64, 175, 0.52);
+      border-radius: 10px;
+      padding: 9px;
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.7));
+      display: grid;
+      gap: 6px;
+    }
+
+    .signal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .signal-provider {
+      color: #bae6fd;
+      font-size: 10px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .signal-score {
+      border: 1px solid rgba(248, 113, 113, 0.8);
+      background: rgba(127, 29, 29, 0.42);
+      color: #fecaca;
+      border-radius: 999px;
+      padding: 3px 8px;
+    }
+
+    .signal-text {
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(226, 232, 240, 0.96);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      border: 1px solid rgba(30, 64, 175, 0.6);
+      background: rgba(30, 58, 138, 0.22);
+      color: #bfdbfe;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .signal-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .signal-link {
+      color: #7dd3fc;
+      text-decoration: none;
+    }
+
+    .heat-list {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+
+    .heat-row {
+      border: 1px solid rgba(30, 64, 175, 0.5);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 7px;
+      display: grid;
+      gap: 5px;
+    }
+
+    .heat-row.hot {
+      border-color: rgba(248, 113, 113, 0.75);
+      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.24), 0 0 26px rgba(248, 113, 113, 0.2);
+      background: linear-gradient(145deg, rgba(69, 10, 10, 0.25), rgba(15, 23, 42, 0.9));
+    }
+
+    .heat-row.critical {
+      border-color: rgba(251, 146, 60, 0.85);
+      box-shadow: 0 0 0 1px rgba(251, 146, 60, 0.35), 0 0 30px rgba(251, 146, 60, 0.24);
+      background: linear-gradient(145deg, rgba(120, 53, 15, 0.26), rgba(15, 23, 42, 0.9));
+    }
+
+    .heat-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .heat-bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(30, 41, 59, 0.95);
+      overflow: hidden;
+    }
+
+    .heat-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #fb7185, #f43f5e);
+    }
+
+    .company-grid {
+      display: grid;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .company-chip {
+      border: 1px solid rgba(30, 64, 175, 0.45);
+      border-radius: 8px;
+      background: rgba(2, 6, 23, 0.58);
+      padding: 6px;
+      display: grid;
+      gap: 5px;
+    }
+
+    .company-chip.top {
+      border-color: rgba(251, 146, 60, 0.8);
+      box-shadow: 0 0 24px rgba(251, 146, 60, 0.2);
+    }
+
+    .company-chip.armed {
+      border-color: rgba(74, 222, 128, 0.9);
+      box-shadow: 0 0 18px rgba(74, 222, 128, 0.22);
+    }
+
+    .company-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .company-symbol {
+      color: #e2e8f0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+
+    .company-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .mini-btn {
+      border: 1px solid rgba(55, 65, 81, 1);
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      padding: 4px 8px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .mini-btn.trade {
+      border-color: rgba(248, 113, 113, 0.82);
+      background: rgba(127, 29, 29, 0.42);
+      color: #fecaca;
+    }
+
+    .mini-btn.arm {
+      border-color: rgba(56, 189, 248, 0.72);
+      background: rgba(30, 58, 138, 0.32);
+      color: #bfdbfe;
+    }
+
+    .mini-btn.arm.on {
+      border-color: rgba(74, 222, 128, 0.9);
+      background: rgba(6, 78, 59, 0.72);
+      color: #bbf7d0;
+    }
+
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .orders-table th {
+      text-align: left;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 5px;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.45);
+    }
+
+    .orders-table td {
+      padding: 6px 5px;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.26);
+      color: rgba(226, 232, 240, 0.92);
+      vertical-align: top;
+    }
+
+    .short-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(248, 113, 113, 0.8);
+      background: rgba(127, 29, 29, 0.44);
+      color: #fecaca;
+      padding: 2px 7px;
+      font-size: 9px;
+      display: inline-block;
+    }
+
+    .status-line {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      border-top: 1px solid rgba(30, 64, 175, 0.45);
+      padding-top: 8px;
+      margin-top: 8px;
+      line-height: 1.45;
+    }
+
+    .empty {
+      border: 1px dashed rgba(30, 64, 175, 0.55);
+      border-radius: 9px;
+      padding: 11px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: rgba(15, 23, 42, 0.4);
+    }
+
+    .subhead-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1000px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .control-grid {
+        grid-template-columns: 1fr;
+      }
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+      .top-status {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell" id="shell-root">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span>BBS Impact Radar</span>
+      </div>
+      <div class="top-links">
+        <a href="New.html" class="chip-link">Main Terminal</a>
+        <a href="ai-settings.html" class="chip-link">AI Settings</a>
+      </div>
+      <div class="top-status">
+        <span class="pill" id="mode-pill">MODE: STANDBY</span>
+        <span class="pill" id="scan-pill">LAST SCAN: --</span>
+      </div>
+    </header>
+
+    <section class="layout">
+      <article class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Provider Catalyst Signals</div>
+          <div class="pill" id="signal-pill">0 SIGNALS</div>
+        </div>
+        <div class="panel-body">
+          <div class="control-grid">
+            <div class="control-card">
+              <div class="label">Providers</div>
+              <div class="provider-row">
+                <label class="provider-toggle"><input type="checkbox" value="claude" checked />Claude</label>
+                <label class="provider-toggle"><input type="checkbox" value="openai" checked />OpenAI</label>
+                <label class="provider-toggle"><input type="checkbox" value="perplexity" checked />Perplexity</label>
+              </div>
+            </div>
+            <div class="control-card">
+              <div class="label">Min Confidence</div>
+              <input id="min-confidence" class="range" type="range" min="45" max="95" step="1" value="62" />
+              <div class="pill" id="confidence-pill">62</div>
+            </div>
+          </div>
+
+          <div class="signals" id="signals-list"></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Industry Shock + Auto Short</div>
+          <div class="pill" id="order-pill">0 ORDERS</div>
+        </div>
+        <div class="panel-body">
+          <div class="control-grid">
+            <div class="control-card">
+              <div class="label">Auto Trade</div>
+              <label class="toggle">
+                <input id="auto-short" type="checkbox" />
+                Arm Auto Short (Paper)
+              </label>
+              <div class="label">Base Order Size</div>
+              <input id="base-qty" class="input" type="number" min="1" step="1" value="5" />
+              <div class="label">Auto Scope</div>
+              <select id="auto-short-scope" class="select">
+                <option value="all">All High-Impact Shorts</option>
+                <option value="armed">Only Armed Symbols</option>
+              </select>
+            </div>
+            <div class="control-card">
+              <div class="label">Execution Policy</div>
+              <select id="execution-policy" class="select">
+                <option value="instant">Instant on Signal</option>
+                <option value="confirm">Require Manual Confirm</option>
+              </select>
+              <div class="btn-row">
+                <button id="scan-now" class="btn primary" type="button">Scan Now</button>
+                <button id="clear-orders" class="btn warn" type="button">Clear Orders</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="subhead-row">
+            <div class="label">Industry Pressure Board</div>
+            <div class="pill" id="top-impact-pill">TOP IMPACT: --</div>
+          </div>
+          <div class="heat-list" id="heat-list"></div>
+
+          <div class="label" style="margin-bottom:6px;">Paper Trade Blotter</div>
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Provider</th>
+                <th>Side</th>
+                <th>Symbol</th>
+                <th>Qty</th>
+                <th>Industry</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="orders-body"></tbody>
+          </table>
+
+          <div class="status-line" id="status-line">Ready. Run scan to detect provider catalysts and industry impact.</div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const shellRoot = document.getElementById('shell-root');
+    const modePillEl = document.getElementById('mode-pill');
+    const scanPillEl = document.getElementById('scan-pill');
+    const signalPillEl = document.getElementById('signal-pill');
+    const orderPillEl = document.getElementById('order-pill');
+    const signalsListEl = document.getElementById('signals-list');
+    const heatListEl = document.getElementById('heat-list');
+    const ordersBodyEl = document.getElementById('orders-body');
+    const statusLineEl = document.getElementById('status-line');
+    const minConfidenceEl = document.getElementById('min-confidence');
+    const confidencePillEl = document.getElementById('confidence-pill');
+    const autoShortEl = document.getElementById('auto-short');
+    const autoShortScopeEl = document.getElementById('auto-short-scope');
+    const baseQtyEl = document.getElementById('base-qty');
+    const executionPolicyEl = document.getElementById('execution-policy');
+    const scanNowEl = document.getElementById('scan-now');
+    const clearOrdersEl = document.getElementById('clear-orders');
+    const topImpactPillEl = document.getElementById('top-impact-pill');
+    const providerToggles = Array.from(document.querySelectorAll('.provider-toggle input[type="checkbox"]'));
+
+    let scanBusy = false;
+    let scanTimer = null;
+    let audioCtx = null;
+    let lastSignals = [];
+    let lastBoard = [];
+    let orders = [];
+    let seenSignalIds = new Set();
+    let armedShortSymbols = new Set();
+
+    function safeGet(key, fallback = '') {
+      try {
+        const value = localStorage.getItem(key);
+        return value == null ? fallback : value;
+      } catch (err) {
+        return fallback;
+      }
+    }
+
+    function safeSet(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (err) {
+        // Ignore storage restrictions.
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function nowLabel() {
+      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    }
+
+    function toShortIso(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '--';
+      return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+    }
+
+    function selectedProviders() {
+      return providerToggles.filter((input) => input.checked).map((input) => input.value);
+    }
+
+    function setStatus(text, color = 'rgba(148, 163, 184, 1)') {
+      statusLineEl.textContent = text;
+      statusLineEl.style.color = color;
+    }
+
+    function renderSignals(signals) {
+      signalPillEl.textContent = `${signals.length} SIGNALS`;
+      if (!signals.length) {
+        signalsListEl.innerHTML = '<div class="empty">No high-confidence catalysts found. Lower threshold or wait for fresh posts.</div>';
+        return;
+      }
+      signalsListEl.innerHTML = signals.map((sig) => {
+        const tags = (sig.themes || []).map((theme) => `<span class="tag">${escapeHtml(theme)}</span>`).join('');
+        const industries = (sig.shortIdeas || [])
+          .slice(0, 3)
+          .map((idea) => `<span class="tag">${escapeHtml(idea.side)} ${escapeHtml(idea.symbol)}</span>`)
+          .join('');
+        const link = sig.postUrl
+          ? `<a class="signal-link" href="${escapeHtml(sig.postUrl)}" target="_blank" rel="noopener noreferrer">Open source post</a>`
+          : '<span>Source unavailable</span>';
+        return `
+          <article class="signal">
+            <div class="signal-top">
+              <span class="signal-provider">${escapeHtml(sig.providerLabel)} • @${escapeHtml(sig.handle || 'source')}</span>
+              <span class="signal-score">CONF ${Number(sig.confidence || 0)}</span>
+            </div>
+            <div class="signal-text">${escapeHtml(sig.postText || '')}</div>
+            <div class="tag-row">${tags}${industries}</div>
+            <div class="signal-foot">
+              <span>${escapeHtml(sig.catalystType || 'Signal')} • ${escapeHtml(toShortIso(sig.postTime))}</span>
+              ${link}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderBoard(board) {
+      if (!board.length) {
+        if (topImpactPillEl) topImpactPillEl.textContent = 'TOP IMPACT: --';
+        heatListEl.innerHTML = '<div class="empty">Industry pressure board is waiting for detected catalysts.</div>';
+        return;
+      }
+      const topRows = board.slice(0, 8);
+      const topSymbols = [];
+      topRows.forEach((row) => {
+        (Array.isArray(row.symbols) ? row.symbols : []).forEach((symbol) => {
+          if (topSymbols.length < 3 && !topSymbols.includes(symbol)) topSymbols.push(symbol);
+        });
+      });
+      if (topImpactPillEl) {
+        topImpactPillEl.textContent = `TOP IMPACT: ${topSymbols.length ? topSymbols.join(' / ') : '--'}`;
+      }
+
+      heatListEl.innerHTML = topRows.map((row, rowIdx) => {
+        const score = Math.max(0, Math.min(100, Number(row.pressureScore || 0)));
+        const symbols = Array.isArray(row.symbols) ? row.symbols : [];
+        const rowClass = rowIdx === 0 ? 'heat-row critical' : (score >= 75 || rowIdx <= 2 ? 'heat-row hot' : 'heat-row');
+        const companyHtml = symbols.length
+          ? symbols.slice(0, 5).map((symbol, symIdx) => {
+              const symbolScore = Math.max(45, Math.min(99, score - symIdx * 4));
+              const armed = armedShortSymbols.has(symbol);
+              const isTop = rowIdx === 0 && symIdx === 0;
+              const chipClass = `company-chip${isTop ? ' top' : ''}${armed ? ' armed' : ''}`;
+              const industryEnc = encodeURIComponent(String(row.industry || 'Unknown'));
+              const symbolEnc = encodeURIComponent(String(symbol || ''));
+              return `
+                <div class="${chipClass}">
+                  <div class="company-head">
+                    <span class="company-symbol">${escapeHtml(symbol)}</span>
+                    <span>Impact ${symbolScore}</span>
+                  </div>
+                  <div class="company-actions">
+                    <button
+                      class="mini-btn trade"
+                      type="button"
+                      data-action="trade-short"
+                      data-symbol="${symbolEnc}"
+                      data-industry="${industryEnc}"
+                      data-score="${symbolScore}"
+                    >Short Now</button>
+                    <button
+                      class="mini-btn arm${armed ? ' on' : ''}"
+                      type="button"
+                      data-action="toggle-arm"
+                      data-symbol="${symbolEnc}"
+                    >${armed ? 'Armed' : 'Auto Short'}</button>
+                  </div>
+                </div>
+              `;
+            }).join('')
+          : '<div class="empty">No mapped symbols yet.</div>';
+        return `
+          <div class="${rowClass}">
+            <div class="heat-meta">
+              <span>${escapeHtml(row.side)} • ${escapeHtml(row.industry)}</span>
+              <span>${score}</span>
+            </div>
+            <div class="heat-bar"><div class="heat-fill" style="width:${score}%;"></div></div>
+            <div class="heat-meta"><span>${symbols.length} symbol(s)</span><span>Pressure</span></div>
+            <div class="company-grid">${companyHtml}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderOrders() {
+      orderPillEl.textContent = `${orders.length} ORDERS`;
+      if (!orders.length) {
+        ordersBodyEl.innerHTML = '<tr><td colspan="7">No paper trades yet.</td></tr>';
+        return;
+      }
+      ordersBodyEl.innerHTML = orders.slice(0, 120).map((order) => `
+        <tr>
+          <td>${escapeHtml(order.time)}</td>
+          <td>${escapeHtml(order.provider)}</td>
+          <td><span class="short-pill">${escapeHtml(order.side)}</span></td>
+          <td>${escapeHtml(order.symbol)}</td>
+          <td>${escapeHtml(String(order.qty))}</td>
+          <td>${escapeHtml(order.industry)}</td>
+          <td>${escapeHtml(order.status)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function saveState() {
+      const snapshot = {
+        minConfidence: Number(minConfidenceEl.value || 62),
+        autoShort: autoShortEl.checked,
+        autoShortScope: autoShortScopeEl.value || 'all',
+        baseQty: Math.max(1, Number(baseQtyEl.value || 5)),
+        executionPolicy: executionPolicyEl.value || 'instant',
+        providers: selectedProviders()
+      };
+      safeSet('bbs_impact_settings', JSON.stringify(snapshot));
+      safeSet('bbs_impact_orders', JSON.stringify(orders.slice(0, 150)));
+      safeSet('bbs_impact_seen', JSON.stringify(Array.from(seenSignalIds).slice(-300)));
+      safeSet('bbs_impact_armed_symbols', JSON.stringify(Array.from(armedShortSymbols).slice(-240)));
+    }
+
+    function loadState() {
+      try {
+        const raw = safeGet('bbs_impact_settings', '');
+        if (raw) {
+          const cfg = JSON.parse(raw);
+          if (Number.isFinite(Number(cfg.minConfidence))) minConfidenceEl.value = String(cfg.minConfidence);
+          autoShortEl.checked = Boolean(cfg.autoShort);
+          if (typeof cfg.autoShortScope === 'string') autoShortScopeEl.value = cfg.autoShortScope;
+          if (Number.isFinite(Number(cfg.baseQty))) baseQtyEl.value = String(Math.max(1, Number(cfg.baseQty)));
+          if (typeof cfg.executionPolicy === 'string') executionPolicyEl.value = cfg.executionPolicy;
+          if (Array.isArray(cfg.providers) && cfg.providers.length) {
+            providerToggles.forEach((input) => {
+              input.checked = cfg.providers.includes(input.value);
+            });
+          }
+        }
+      } catch (err) {
+        // Ignore bad local state.
+      }
+
+      try {
+        const rawOrders = safeGet('bbs_impact_orders', '');
+        if (rawOrders) {
+          const parsedOrders = JSON.parse(rawOrders);
+          if (Array.isArray(parsedOrders)) orders = parsedOrders.slice(0, 150);
+        }
+      } catch (err) {
+        // Ignore bad order cache.
+      }
+
+      try {
+        const rawSeen = safeGet('bbs_impact_seen', '');
+        if (rawSeen) {
+          const parsedSeen = JSON.parse(rawSeen);
+          if (Array.isArray(parsedSeen)) seenSignalIds = new Set(parsedSeen.map((item) => String(item)));
+        }
+      } catch (err) {
+        // Ignore bad seen cache.
+      }
+
+      try {
+        const rawArmed = safeGet('bbs_impact_armed_symbols', '');
+        if (rawArmed) {
+          const parsedArmed = JSON.parse(rawArmed);
+          if (Array.isArray(parsedArmed)) {
+            armedShortSymbols = new Set(parsedArmed.map((item) => String(item || '').trim().toUpperCase()).filter(Boolean));
+          }
+        }
+      } catch (err) {
+        // Ignore bad armed-symbol cache.
+      }
+    }
+
+    function playAlertTone() {
+      try {
+        if (!audioCtx) {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          if (!Ctx) return;
+          audioCtx = new Ctx();
+        }
+        const base = audioCtx.currentTime;
+        [0, 0.12, 0.24].forEach((offset, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.value = idx % 2 === 0 ? 720 : 980;
+          gain.gain.value = 0.0001;
+          gain.gain.exponentialRampToValueAtTime(0.08, base + offset + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, base + offset + 0.12);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(base + offset);
+          osc.stop(base + offset + 0.14);
+        });
+      } catch (err) {
+        // Ignore audio failures.
+      }
+    }
+
+    function flashShell() {
+      shellRoot.classList.remove('flash');
+      void shellRoot.offsetWidth;
+      shellRoot.classList.add('flash');
+    }
+
+    function generateOrderQty(confidence) {
+      const baseQty = Math.max(1, Number(baseQtyEl.value || 5));
+      const multiplier = Math.max(1, Math.round(Number(confidence || 60) / 20));
+      return baseQty * multiplier;
+    }
+
+    function normalizeSymbol(value) {
+      return String(value || '').trim().toUpperCase().replace(/[^A-Z0-9._-]/g, '').slice(0, 30);
+    }
+
+    function createShortOrder(signal, idea, status = 'PAPER OPEN') {
+      const symbol = normalizeSymbol(idea?.symbol);
+      if (!symbol) return false;
+      const order = {
+        id: `${signal.id}|${symbol}`,
+        time: nowLabel(),
+        provider: signal.providerLabel || signal.provider || 'Provider',
+        side: 'SHORT',
+        symbol,
+        qty: generateOrderQty(signal.confidence),
+        industry: idea?.industry || 'Unknown',
+        status
+      };
+      if (orders.some((row) => row.id === order.id)) return false;
+      orders.unshift(order);
+      if (orders.length > 220) orders = orders.slice(0, 220);
+      return true;
+    }
+
+    function pushOrdersFromSignal(signal) {
+      if (!signal || !Array.isArray(signal.shortIdeas) || !signal.shortIdeas.length) return 0;
+      const scope = autoShortScopeEl.value || 'all';
+      let created = 0;
+      signal.shortIdeas.forEach((idea) => {
+        const symbol = normalizeSymbol(idea?.symbol);
+        if (scope === 'armed' && !armedShortSymbols.has(symbol)) return;
+        if (createShortOrder(signal, idea, 'PAPER OPEN')) created += 1;
+      });
+      return created;
+    }
+
+    function executeManualShort(symbolRaw, industry, impactScore = 70) {
+      const symbol = normalizeSymbol(symbolRaw);
+      if (!symbol) return;
+      const signal = {
+        id: `manual_${symbol}_${Date.now()}`,
+        provider: 'Manual',
+        providerLabel: 'Manual',
+        confidence: Number(impactScore) || 70
+      };
+      const ok = createShortOrder(signal, { symbol, industry }, 'MANUAL PAPER');
+      if (ok) {
+        renderOrders();
+        flashShell();
+        setStatus(`Manual short order staged for ${symbol}.`, '#fda4af');
+        saveState();
+      }
+    }
+
+    function toggleArmedShortSymbol(symbolRaw) {
+      const symbol = normalizeSymbol(symbolRaw);
+      if (!symbol) return;
+      if (armedShortSymbols.has(symbol)) armedShortSymbols.delete(symbol);
+      else armedShortSymbols.add(symbol);
+      renderBoard(lastBoard);
+      saveState();
+      setStatus(
+        armedShortSymbols.has(symbol)
+          ? `Auto short armed for ${symbol}.`
+          : `Auto short disarmed for ${symbol}.`,
+        armedShortSymbols.has(symbol) ? '#86efac' : 'rgba(148, 163, 184, 1)'
+      );
+    }
+
+    function maybeAutoTrade(signals) {
+      if (!autoShortEl.checked) return;
+      const policy = executionPolicyEl.value || 'instant';
+      if (policy !== 'instant') return;
+
+      let newOrders = 0;
+      signals.forEach((signal) => {
+        const sigId = String(signal.id || '');
+        if (!sigId || seenSignalIds.has(sigId)) return;
+        if (Number(signal.confidence || 0) < Number(minConfidenceEl.value || 62)) return;
+        seenSignalIds.add(sigId);
+        newOrders += pushOrdersFromSignal(signal);
+      });
+
+      if (newOrders > 0) {
+        renderOrders();
+        playAlertTone();
+        flashShell();
+        setStatus(`Auto short triggered ${newOrders} new paper order(s) from high-confidence catalysts.`, '#fda4af');
+      }
+    }
+
+    function buildClientFallbackPayload(providers, minConfidence) {
+      const labels = {
+        claude: 'Claude',
+        openai: 'OpenAI',
+        perplexity: 'Perplexity'
+      };
+      const handles = {
+        claude: 'claudeai',
+        openai: 'openai',
+        perplexity: 'perplexity_ai'
+      };
+      const templates = [
+        {
+          theme: 'medical-ai',
+          catalystType: 'Feature Launch',
+          text: 'Launching new medical reasoning workflows for clinical operations and diagnostics support.',
+          shortIdeas: [
+            { symbol: 'BBS_HLTH_LEGACY', industry: 'Legacy Healthcare Software' },
+            { symbol: 'BBS_MED_BPO', industry: 'Traditional Outsourced Services' }
+          ]
+        },
+        {
+          theme: 'search-agents',
+          catalystType: 'Product Rollout',
+          text: 'Shipping deeper research agents with answer-engine UX for enterprise search use cases.',
+          shortIdeas: [
+            { symbol: 'BBS_SEARCH_LEGACY', industry: 'Legacy Search Monetization' },
+            { symbol: 'BBS_RES_TOOLS', industry: 'Manual Research Vendors' }
+          ]
+        },
+        {
+          theme: 'coding-devtools',
+          catalystType: 'Feature Release',
+          text: 'Releasing stronger coding agent loops for debugging, repo analysis, and code migration.',
+          shortIdeas: [
+            { symbol: 'BBS_IT_SERV', industry: 'Legacy IT Services' },
+            { symbol: 'BBS_JR_DEV', industry: 'Entry-Level Coding Market' }
+          ]
+        },
+        {
+          theme: 'enterprise-workflows',
+          catalystType: 'Launch Update',
+          text: 'Introducing enterprise workflow automation upgrades for support, CRM, and operations.',
+          shortIdeas: [
+            { symbol: 'BBS_WORKFLOW_OLD', industry: 'Legacy Workflow Suites' }
+          ]
+        }
+      ];
+
+      const signals = [];
+      const now = Date.now();
+      providers.forEach((provider, providerIndex) => {
+        for (let i = 0; i < 2; i += 1) {
+          const tpl = templates[(providerIndex + i) % templates.length];
+          const conf = Math.max(minConfidence, Math.min(96, 72 + ((providerIndex * 9 + i * 6) % 20)));
+          signals.push({
+            id: `${provider}_${providerIndex}_${i}_${tpl.theme}`,
+            provider,
+            providerLabel: labels[provider] || provider,
+            handle: handles[provider] || provider,
+            postText: `${labels[provider] || provider}: ${tpl.text}`,
+            postTime: new Date(now - (providerIndex * 2 + i) * 11 * 60 * 1000).toISOString(),
+            postUrl: `https://x.com/${encodeURIComponent(handles[provider] || provider)}`,
+            source: 'Client Fallback',
+            confidence: conf,
+            catalystType: tpl.catalystType,
+            themes: [tpl.theme],
+            shortIdeas: tpl.shortIdeas.map((idea) => ({
+              side: 'SHORT',
+              symbol: idea.symbol,
+              industry: idea.industry
+            }))
+          });
+        }
+      });
+
+      const boardMap = new Map();
+      signals.forEach((sig) => {
+        (sig.shortIdeas || []).forEach((idea) => {
+          const key = `SHORT:${idea.industry}`;
+          const prev = boardMap.get(key) || {
+            industry: idea.industry,
+            side: 'SHORT',
+            pressureScore: 0,
+            symbols: []
+          };
+          prev.pressureScore += Math.max(50, Number(sig.confidence || 70));
+          if (!prev.symbols.includes(idea.symbol)) prev.symbols.push(idea.symbol);
+          boardMap.set(key, prev);
+        });
+      });
+
+      const industryBoard = Array.from(boardMap.values())
+        .map((row) => ({
+          ...row,
+          pressureScore: Math.min(100, Math.round(row.pressureScore / Math.max(1, row.symbols.length)))
+        }))
+        .sort((a, b) => b.pressureScore - a.pressureScore);
+
+      return {
+        mode: 'SIM',
+        source: 'client_fallback',
+        signals,
+        industryBoard
+      };
+    }
+
+    function applyScanPayload(payload) {
+      lastSignals = Array.isArray(payload.signals) ? payload.signals : [];
+      lastBoard = Array.isArray(payload.industryBoard) ? payload.industryBoard : [];
+      renderSignals(lastSignals);
+      renderBoard(lastBoard);
+      maybeAutoTrade(lastSignals);
+      renderOrders();
+
+      const mode = String(payload.mode || 'SIM').toUpperCase();
+      const src = String(payload.source || 'fallback');
+      modePillEl.textContent = `MODE: ${mode}`;
+      modePillEl.style.color = mode === 'LIVE' ? '#86efac' : '#facc15';
+      scanPillEl.textContent = `LAST SCAN: ${nowLabel()}`;
+      return { mode, src };
+    }
+
+    async function scan(force = false) {
+      if (scanBusy) return;
+      const providers = selectedProviders();
+      if (!providers.length) {
+        setStatus('Select at least one provider before scanning.', '#facc15');
+        return;
+      }
+
+      scanBusy = true;
+      setStatus('Scanning provider posts and impact map...', '#facc15');
+      const params = new URLSearchParams();
+      params.set('providers', providers.join(','));
+      params.set('minConfidence', String(Number(minConfidenceEl.value || 62)));
+      params.set('limit', '5');
+      if (force) params.set('t', String(Date.now()));
+
+      try {
+        const res = await fetch(`/api/provider-impact?${params.toString()}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const payload = await res.json();
+        const { mode, src } = applyScanPayload(payload);
+        setStatus(`Scan complete. Source: ${src}. Signals: ${lastSignals.length}.`, mode === 'LIVE' ? '#86efac' : '#facc15');
+      } catch (err) {
+        const fallbackPayload = buildClientFallbackPayload(providers, Number(minConfidenceEl.value || 62));
+        const { src } = applyScanPayload(fallbackPayload);
+        setStatus(`Impact API unavailable (${err.message}). Running ${src} with simulated signals.`, '#facc15');
+      } finally {
+        scanBusy = false;
+        saveState();
+      }
+    }
+
+    function wireEvents() {
+      providerToggles.forEach((input) => {
+        input.addEventListener('change', () => {
+          saveState();
+        });
+      });
+
+      minConfidenceEl.addEventListener('input', () => {
+        confidencePillEl.textContent = String(minConfidenceEl.value);
+        saveState();
+      });
+
+      autoShortEl.addEventListener('change', () => {
+        saveState();
+        setStatus(autoShortEl.checked ? 'Auto short armed in paper mode.' : 'Auto short disarmed.', autoShortEl.checked ? '#fda4af' : 'rgba(148, 163, 184, 1)');
+      });
+
+      autoShortScopeEl.addEventListener('change', () => {
+        saveState();
+        setStatus(
+          autoShortScopeEl.value === 'armed'
+            ? 'Auto short scope set to armed symbols only.'
+            : 'Auto short scope set to all high-impact symbols.',
+          '#93c5fd'
+        );
+      });
+
+      baseQtyEl.addEventListener('input', () => {
+        if (Number(baseQtyEl.value) < 1) baseQtyEl.value = '1';
+        saveState();
+      });
+
+      executionPolicyEl.addEventListener('change', saveState);
+
+      scanNowEl.addEventListener('click', () => {
+        scan(true);
+      });
+
+      clearOrdersEl.addEventListener('click', () => {
+        orders = [];
+        renderOrders();
+        saveState();
+        setStatus('Paper orders cleared.', '#93c5fd');
+      });
+
+      heatListEl.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const button = target.closest('button[data-action]');
+        if (!button) return;
+        const action = String(button.dataset.action || '');
+        const symbol = decodeURIComponent(String(button.dataset.symbol || ''));
+        const industry = decodeURIComponent(String(button.dataset.industry || 'Unknown'));
+        const score = Number(button.dataset.score || 70);
+
+        if (action === 'trade-short') {
+          executeManualShort(symbol, industry, score);
+          return;
+        }
+        if (action === 'toggle-arm') {
+          toggleArmedShortSymbol(symbol);
+        }
+      });
+    }
+
+    function startAutoScan() {
+      if (scanTimer) clearInterval(scanTimer);
+      scanTimer = setInterval(() => scan(false), 70000);
+    }
+
+    loadState();
+    confidencePillEl.textContent = String(minConfidenceEl.value);
+    renderSignals([]);
+    renderBoard([]);
+    renderOrders();
+    wireEvents();
+    startAutoScan();
+    scan(true);
+  </script>
+</body>
+</html>
