@@ -596,6 +596,11 @@
     }
 
     @media (max-width: 1000px) {
+      html, body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
       body::before {
         animation: none;
         opacity: 0.14;
@@ -603,8 +608,18 @@
       .shell.flash {
         animation: none;
       }
+      .shell {
+        overflow: visible;
+      }
       .layout {
         grid-template-columns: 1fr;
+        min-height: 0;
+      }
+      .panel {
+        overflow: visible;
+      }
+      .panel-body {
+        overflow: visible;
       }
       .control-grid {
         grid-template-columns: 1fr;

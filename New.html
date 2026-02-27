@@ -1643,6 +1643,7 @@
     .scroll-y {
       scrollbar-width: thin;
       scrollbar-color: rgba(55, 65, 81, 1) transparent;
+      -webkit-overflow-scrolling: touch;
     }
 
     .scroll-y::-webkit-scrollbar {
@@ -1665,6 +1666,17 @@
     }
 
     @media (max-width: 900px) {
+      html, body {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .app-root {
+        height: auto;
+        min-height: 100dvh;
+      }
       .topbar {
         height: auto;
         padding: 8px;
@@ -1682,12 +1694,27 @@
       .layout {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto auto auto;
-        max-height: calc(100vh - 184px);
+        max-height: none;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
       }
       .panel {
         border-right: none;
         border-bottom: 1px solid rgba(15, 23, 42, 0.9);
-        max-height: 260px;
+        max-height: none;
+        min-height: 220px;
+      }
+      .panel-body {
+        height: auto;
+        min-height: 0;
+      }
+      .watchlist,
+      .workspace-panel-body,
+      .consultant-chat,
+      .news-list,
+      .x-impact-list {
+        -webkit-overflow-scrolling: touch;
       }
       .panel-main-inner {
         grid-template-rows: auto auto auto;
