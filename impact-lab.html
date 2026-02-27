@@ -600,6 +600,7 @@
         overflow-x: hidden;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
       }
       body::before {
         animation: none;
@@ -614,12 +615,15 @@
       .layout {
         grid-template-columns: 1fr;
         min-height: 0;
+        overflow: visible;
       }
       .panel {
         overflow: visible;
       }
       .panel-body {
         overflow: visible;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
       }
       .control-grid {
         grid-template-columns: 1fr;

@@ -1672,10 +1672,12 @@
         overflow-x: hidden;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
       }
       .app-root {
         height: auto;
         min-height: 100dvh;
+        overflow: visible;
       }
       .topbar {
         height: auto;
@@ -1695,7 +1697,7 @@
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto auto auto;
         max-height: none;
-        overflow-y: auto;
+        overflow: visible;
         overscroll-behavior: contain;
         -webkit-overflow-scrolling: touch;
       }
@@ -1708,13 +1710,21 @@
       .panel-body {
         height: auto;
         min-height: 0;
+        overflow: visible;
+      }
+      .panel-main-inner {
+        height: auto;
       }
       .watchlist,
       .workspace-panel-body,
       .consultant-chat,
       .news-list,
-      .x-impact-list {
+      .x-impact-list,
+      .alerts-list {
+        max-height: none !important;
+        overflow: visible !important;
         -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
       }
       .panel-main-inner {
         grid-template-rows: auto auto auto;
