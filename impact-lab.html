@@ -585,7 +585,24 @@
       flex-wrap: wrap;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      body::before {
+        animation: none !important;
+        opacity: 0.14;
+      }
+      .shell.flash {
+        animation: none !important;
+      }
+    }
+
     @media (max-width: 1000px) {
+      body::before {
+        animation: none;
+        opacity: 0.14;
+      }
+      .shell.flash {
+        animation: none;
+      }
       .layout {
         grid-template-columns: 1fr;
       }
@@ -736,6 +753,13 @@
     let orders = [];
     let seenSignalIds = new Set();
     let armedShortSymbols = new Set();
+    const impactLowPowerMode = (() => {
+      const smallScreen = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 1000px)').matches;
+      const reducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const lowCpu = typeof navigator !== 'undefined' && Number(navigator.hardwareConcurrency || 8) <= 4;
+      const lowMem = typeof navigator !== 'undefined' && Number(navigator.deviceMemory || 8) <= 4;
+      return Boolean(smallScreen || reducedMotion || lowCpu || lowMem);
+    })();
 
     function safeGet(key, fallback = '') {
       try {
@@ -783,12 +807,13 @@
     }
 
     function renderSignals(signals) {
+      const visibleSignals = impactLowPowerMode ? signals.slice(0, 10) : signals;
       signalPillEl.textContent = `${signals.length} SIGNALS`;
-      if (!signals.length) {
+      if (!visibleSignals.length) {
         signalsListEl.innerHTML = '<div class="empty">No high-confidence catalysts found. Lower threshold or wait for fresh posts.</div>';
         return;
       }
-      signalsListEl.innerHTML = signals.map((sig) => {
+      signalsListEl.innerHTML = visibleSignals.map((sig) => {
         const tags = (sig.themes || []).map((theme) => `<span class="tag">${escapeHtml(theme)}</span>`).join('');
         const industries = (sig.shortIdeas || [])
           .slice(0, 3)
@@ -820,7 +845,7 @@
         heatListEl.innerHTML = '<div class="empty">Industry pressure board is waiting for detected catalysts.</div>';
         return;
       }
-      const topRows = board.slice(0, 8);
+      const topRows = board.slice(0, impactLowPowerMode ? 5 : 8);
       const topSymbols = [];
       topRows.forEach((row) => {
         (Array.isArray(row.symbols) ? row.symbols : []).forEach((symbol) => {
@@ -836,7 +861,7 @@
         const symbols = Array.isArray(row.symbols) ? row.symbols : [];
         const rowClass = rowIdx === 0 ? 'heat-row critical' : (score >= 75 || rowIdx <= 2 ? 'heat-row hot' : 'heat-row');
         const companyHtml = symbols.length
-          ? symbols.slice(0, 5).map((symbol, symIdx) => {
+          ? symbols.slice(0, impactLowPowerMode ? 3 : 5).map((symbol, symIdx) => {
               const symbolScore = Math.max(45, Math.min(99, score - symIdx * 4));
               const armed = armedShortSymbols.has(symbol);
               const isTop = rowIdx === 0 && symIdx === 0;
@@ -997,6 +1022,7 @@
     }
 
     function flashShell() {
+      if (impactLowPowerMode) return;
       shellRoot.classList.remove('flash');
       void shellRoot.offsetWidth;
       shellRoot.classList.add('flash');
@@ -1320,7 +1346,7 @@
 
     function startAutoScan() {
       if (scanTimer) clearInterval(scanTimer);
-      scanTimer = setInterval(() => scan(false), 70000);
+      scanTimer = setInterval(() => scan(false), impactLowPowerMode ? 120000 : 70000);
     }
 
     loadState();

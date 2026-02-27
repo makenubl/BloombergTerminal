@@ -1546,6 +1546,14 @@
       animation: opportunityFlash 0.8s ease-out;
     }
 
+    .app-root.low-power.opportunity-flash {
+      animation: none;
+    }
+
+    .app-root.low-power .market-tape-track {
+      animation-duration: 72s;
+    }
+
     @keyframes opportunityFlash {
       0% {
         filter: saturate(1) brightness(1);
@@ -1690,6 +1698,9 @@
       .workspace-tabs {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
+      .market-tape-track {
+        animation-duration: 64s;
+      }
       .video-controls,
       .video-controls.secondary {
         grid-template-columns: 1fr;
@@ -1708,6 +1719,16 @@
       }
       .command-feedback {
         max-width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .market-tape-track {
+        animation: none !important;
+        transform: none !important;
+      }
+      .app-root.opportunity-flash {
+        animation: none !important;
       }
     }
   </style>
@@ -2200,10 +2221,18 @@
     let lastOpportunityAt = 0;
     let activeVideoRoom = '';
     let xImpactMode = 'SIM';
+    let marketLoopCount = 0;
     let audioCtx = null;
     let opportunityFeed = [];
     let xImpactFeed = [];
     const consultantMessages = [];
+    const lowPowerMode = (() => {
+      const smallScreen = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 900px)').matches;
+      const reducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const lowCpu = typeof navigator !== 'undefined' && Number(navigator.hardwareConcurrency || 8) <= 4;
+      const lowMem = typeof navigator !== 'undefined' && Number(navigator.deviceMemory || 8) <= 4;
+      return Boolean(smallScreen || reducedMotion || lowCpu || lowMem);
+    })();
 
     const rangePoints = { '1D': 72, '5D': 120, '1M': 180, '3M': 240 };
     const opportunityCooldownMs = 22000;
@@ -3784,17 +3813,26 @@
     }
 
     function marketLoop() {
+      marketLoopCount += 1;
       tickSymbols();
       tickMacroAssets();
       maybePushHeadline();
       checkAlerts();
       detectOpportunities();
-      renderWatchlist();
-      renderMarketTape();
-      renderMarketMatrix();
-      renderNews();
-      renderPositions();
-      refreshActiveVisuals();
+
+      const fastCycle = !lowPowerMode || marketLoopCount % 2 === 0;
+      const slowCycle = !lowPowerMode || marketLoopCount % 3 === 0;
+
+      if (fastCycle) {
+        renderWatchlist();
+        renderMarketTape();
+        renderMarketMatrix();
+        renderPositions();
+        refreshActiveVisuals();
+      }
+      if (slowCycle) {
+        renderNews();
+      }
     }
 
     bootstrapState();
@@ -3816,6 +3854,9 @@
     updateBuzzerUi();
     refreshConsultantConfigUI();
     initVideoWorkspace();
+    if (appRootEl && lowPowerMode) {
+      appRootEl.classList.add('low-power');
+    }
     addConsultantMessage('assistant', 'BBS Consultant online. Ask for trade plans, macro context, or risk-adjusted entries.');
     switchWorkspace(activeWorkspace);
     setFeedStatus('SIM');
@@ -3823,10 +3864,10 @@
     setActiveSymbol('AAPL');
     setCommandFeedback('BBS Terminal ready. Type HELP for function commands.', '#38bdf8');
 
-    setInterval(marketLoop, 2600);
-    setInterval(() => syncFromApi(activeSymbol), 25000);
-    setInterval(() => syncXImpactFeed(false), 85000);
-    setInterval(refreshConsultantConfigUI, 4000);
+    setInterval(marketLoop, lowPowerMode ? 4200 : 2600);
+    setInterval(() => syncFromApi(activeSymbol), lowPowerMode ? 38000 : 25000);
+    setInterval(() => syncXImpactFeed(false), lowPowerMode ? 120000 : 85000);
+    setInterval(refreshConsultantConfigUI, lowPowerMode ? 7000 : 4000);
     syncFromApi(activeSymbol);
     syncXImpactFeed(false);
   </script>
